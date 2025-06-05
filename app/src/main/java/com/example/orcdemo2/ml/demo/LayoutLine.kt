@@ -1,6 +1,115 @@
 package com.example.orcdemo2.ml.demo
 
+import android.util.Log
+import com.google.gson.Gson
 import com.google.mlkit.vision.text.Text
+
+fun calculateYThreshold(imageHeight: Int): Float {
+    return imageHeight * 0.01f
+}
+
+fun groupLinesByY(lines: List<LayoutLine>, threshold: Float = 20f): List<LayoutLine> {
+    Log.e("Suong","groupLinesByY: "+ threshold)
+    val sorted = lines.sortedWith(compareBy({ it.midY }, { it.minX }))
+
+    val result = mutableListOf<LayoutLine>()
+    var currentGroup = mutableListOf<LayoutLine>()
+
+    for (line in sorted) {
+        val lowerText = line.text.lowercase()
+        if ("smme" in lowerText) {
+            // Nếu có group đang gộp thì merge lại trước
+            if (currentGroup.isNotEmpty()) {
+                result.add(mergeLines(currentGroup))
+                currentGroup.clear()
+            }
+            // Thêm dòng "sume" riêng biệt
+            result.add(line)
+            continue
+        }
+
+        if (currentGroup.isEmpty()) {
+            currentGroup.add(line)
+        } else {
+            val lastMidY = currentGroup.last().midY
+            if (kotlin.math.abs(line.midY - lastMidY) <= threshold) {
+                currentGroup.add(line)
+            } else {
+                result.add(mergeLines(currentGroup))
+                currentGroup = mutableListOf(line)
+            }
+        }
+    }
+
+    if (currentGroup.isNotEmpty()) {
+        result.add(mergeLines(currentGroup))
+    }
+
+    return result
+}
+
+fun groupLinesByY2(lines: List<LayoutLine>, threshold: Float = 20f): List<LayoutLine> {
+    // Bước 1: Sắp xếp theo midY trước, sau đó theo minX
+    val sorted = lines.sortedWith(compareBy({ it.midY }, { it.minX }))
+
+    val result = mutableListOf<LayoutLine>()
+    var currentGroup = mutableListOf<LayoutLine>()
+
+    for (line in sorted) {
+        if (currentGroup.isEmpty()) {
+            currentGroup.add(line)
+        } else {
+            val lastMidY = currentGroup.last().midY
+            if (kotlin.math.abs(line.midY - lastMidY) <= threshold) {
+                currentGroup.add(line)
+            } else {
+                result.add(mergeLines(currentGroup))
+                currentGroup = mutableListOf(line)
+            }
+        }
+    }
+
+    if (currentGroup.isNotEmpty()) {
+        result.add(mergeLines(currentGroup))
+    }
+
+    return result
+}
+
+// Hàm gộp nhiều LayoutLine thành 1 LayoutLine
+private fun mergeLines(group: List<LayoutLine>): LayoutLine {
+    val sortedGroup = group.sortedBy { it.minX }
+    val text = sortedGroup.joinToString("   |  ") { it.text }
+    val midY = sortedGroup.map { it.midY }.average().toFloat()
+    val minX = sortedGroup.minOf { it.minX }
+    val maxX = sortedGroup.maxOf { it.maxX }
+    return LayoutLine(text, midY, minX, maxX)
+}
+
+fun isInvoiceItem(line: LayoutLine): Boolean {
+    val text = line.text.trim()
+
+    // Không phải các dòng tổng, thuế, tiêu đề...
+    val ignoreKeywords = listOf("Gesamtbetrag", "Mwst", "Netto", "Brutto", "Typ")
+    if (ignoreKeywords.any { it in text }) return false
+
+    // Phải chứa đơn vị tiền tệ
+//    val containsCurrency = text.contains("EUR") || text.contains("€") || text.contains("B")
+//    if (!containsCurrency) return false
+
+    // Có dấu phân cách như |
+    val containsSeparator = text.contains("|")
+    if (!containsSeparator) return false
+
+    // Không quá ngắn (tránh số lượng, thuế)
+    if (text.length < 15) return false
+
+    // Không chỉ là số hoặc giá
+    val mostlyDigits = text.count { it.isDigit() } > text.length * 0.6
+    if (mostlyDigits) return false
+
+    return true
+}
 
 data class LayoutLine(
     val text: String,
@@ -12,9 +121,12 @@ data class LayoutLine(
         fun from(line: Text.Line): LayoutLine? {
             val box = line.boundingBox ?: return null
             val text = line.text
-            val midY = box.centerY().toFloat()
+            val midY = (box.top + box.bottom) / 2f
+
+               // box.centerY().toFloat()
             val minX = box.left.toFloat()
             val maxX = box.right.toFloat()
+            Log.e("Suong","midY"+midY + " - " + box.centerY())
             return LayoutLine(text, midY, minX, maxX)
         }
     }
@@ -36,20 +148,40 @@ data class ItemLine(
     val lineTotal: Double?
 )
 
-class LayoutExtractor {
+class LayoutExtractor(var height:Int) {
     fun extractSections(text: Text): List<LayoutSection> {
         val lines = text.textBlocks
             .flatMap { it.lines }
             .mapNotNull { LayoutLine.from(it) }
 
-        val sortedLines = lines.sortedByDescending { it.midY }
+        val sortedLines = lines.sortedBy { it.midY }
+        Log.e("suong","sortedLines: "+Gson().toJson(sortedLines))
+        //val sortedLines = lines.sortedWith(compareBy({ it.midY }, { it.minX}))
+
+        val  threshold  = calculateYThreshold(height)
+        val groupedLines = groupLinesByY(sortedLines,threshold)
+        val groupedLines2 = groupLinesByY(sortedLines, threshold = threshold)
+
+        val itemInvoices = mutableListOf<LayoutLine>()
+        groupedLines2.forEach {
+          //  if(it.text.contains("Rübli-Muff in")) {
+                if (isInvoiceItem(it)) {
+                    itemInvoices.add(it)
+
+                }
+           // }
+        }
+
+        Log.e("suong", "itemInvoices: " + Gson().toJson(itemInvoices))
 
         val sections = mutableListOf<List<LayoutLine>>()
         var currentSection = mutableListOf<LayoutLine>()
         var lastY: Float? = null
-        val verticalThreshold = 20f // Điều chỉnh theo độ phân giải ảnh
+        val verticalThreshold = 70f // Điều chỉnh theo độ phân giải ảnh
 
-        for (line in sortedLines) {
+        Log.e("suong","groupedLines: "+Gson().toJson(groupedLines))
+        Log.e("suong","groupedLines2: "+Gson().toJson(groupedLines2))
+        for (line in groupedLines) {
             if (lastY != null && kotlin.math.abs(line.midY - lastY) > verticalThreshold) {
                 if (currentSection.isNotEmpty()) {
                     sections.add(currentSection)

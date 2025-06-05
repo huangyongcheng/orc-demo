@@ -15,9 +15,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.orcdemo2.R
+import com.example.orcdemo2.ml.demo.LayoutExtractor
+import com.example.orcdemo2.ml.demo.LayoutSectionType
+import com.example.orcdemo2.ml.demo.SectionClassifier
 import com.example.orcdemo2.ml.tflite.ModelWrapper
 import com.example.orcdemo2.ml.tflite.MyTokenizer
 import com.example.orcdemo2.ml.tflite2.ImageClassifier
+import com.example.orcdemo2.ml.thuattoan.ExtractItem
+import com.example.orcdemo2.ml.thuattoan.ExtractItem.extractInvoiceFromText
+
+import com.example.orcdemo2.ml.thuattoan.LayoutLine
+import com.google.gson.Gson
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -37,7 +45,7 @@ class MLActivity : Activity() {
             pickImageFromGallery()
         }
 
-        invoiceParser = InvoiceParser(this@MLActivity)
+      //  invoiceParser = InvoiceParser(this@MLActivity)
 
         try {
             classifier = ImageClassifier(this)
@@ -64,6 +72,8 @@ class MLActivity : Activity() {
         }
     }
 
+
+
     private fun runTextRecognition(imageUri: Uri) {
 //        val bitmap = if (Build.VERSION.SDK_INT < 28) {
 //            MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
@@ -77,8 +87,8 @@ class MLActivity : Activity() {
         val bitmap = BitmapFactory.decodeStream(inputStream)
 
 
-        val result = classifier!!.classify(bitmap)
-        Log.e("Suong","result: "+ result)
+//        val result = classifier!!.classify(bitmap)
+//        Log.e("Suong","result: "+ result)
 
         val inputImage = InputImage.fromBitmap(bitmap, 0)
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
@@ -86,11 +96,73 @@ class MLActivity : Activity() {
         recognizer.process(inputImage)
             .addOnSuccessListener { visionText ->
                 Log.e("Suong","Text: "+ visionText.text)
+
 //                val value = parseInvoiceItems(visionText.text)
 //                Log.e("Suong","value list: "+ value.toList().toString())
-                processInvoiceText(visionText.text)
+               // processInvoiceText(visionText.text)
 //                parseLineItems(visionText.text)
                findViewById<TextView>(R.id.textResult).text = visionText.text
+
+
+
+//                val words = mutableListOf<ExtractItem.OcrWord>()
+//                for (block in visionText.textBlocks) {
+//                    for (line in block.lines) {
+//                        for (element in line.elements) {
+//                            val rect = element.boundingBox
+//                            if (rect != null) {
+//                                words.add(ExtractItem.OcrWord(element.text, rect.left, rect.top, rect.width(), rect.height()))
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                val items = extractInvoiceItemsFromBoxes(words)
+//                Log.e("Suong","items: "+Gson().toJson(items))
+
+
+
+                //
+//                val text = visionText.textBlocks.flatMap { it.lines }
+//                val layoutExtractor = LayoutLine.LayoutExtractor()
+//                val rawSections = layoutExtractor.extractSections(from = text)
+//
+//                val classifier = LayoutLine.SectionClassifier()
+//                val classifiedSections = classifier.classify(rawSections).filter { it.type == LayoutLine.LayoutSectionType.ITEM_LIST }
+//
+//                Log.e("Suong","classifiedSections "+ Gson().toJson(classifiedSections))
+
+
+                //
+
+//                val invoice = extractInvoiceFromText(visionText.text.trimIndent())
+//                Log.e("Suong","invoice "+ Gson().toJson(invoice))
+
+
+                //
+
+                val extractor = LayoutExtractor(bitmap.height)
+                val classifier = SectionClassifier()
+
+                val sectionsUnknown = extractor.extractSections(visionText)
+                val sections = classifier.classify(sectionsUnknown)
+
+                for (section in sections) {
+                    Log.e("SuongVong","=== Section type: ${section.type} ===")
+                    for (line in section.lines) {
+                        Log.e("SuongVong",line.text)
+                    }
+                    if (section.type == LayoutSectionType.ITEM_LIST) {
+                        val items = classifier.parseItemList(section.lines)
+                        Log.e("SuongVong","--- Parsed Items ---")
+                        for (item in items) {
+                            Log.e("SuongVong","Product: ${item.productName}, Quantity: ${item.quantity ?: 0}, UnitPrice: ${item.unitPrice ?: 0}, LineTotal: ${item.lineTotal ?: 0}")
+                        }
+                    }
+                }
+
+
+
             }
             .addOnFailureListener { e ->
                 findViewById<TextView>(R.id.textResult).text = "Error: ${e.message}"
