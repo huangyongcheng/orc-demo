@@ -1,0 +1,110 @@
+[
+  {
+    "maxX": 455.0,
+    "midY": 27.25,
+    "minX": 20.0,
+    "text": "Musterlieferant GmbH   |  Ums.St.ID: DE1234567"
+  },
+  {
+    "maxX": 615.0,
+    "midY": 44.75,
+    "minX": 20.0,
+    "text": "Musterstraße 24   |  Musterbank, IBAN DE1234567390, BIC DE123456"
+  },
+  {
+    "maxX": 145.0,
+    "midY": 63.0,
+    "minX": 20.0,
+    "text": "12345 Musterhausen"
+  },
+  {
+    "maxX": 623.0,
+    "midY": 178.33333,
+    "minX": 19.0,
+    "text": "Eleonore Chatterly   |  RechnungsNr:   |  4711"
+  },
+  {
+    "maxX": 624.0,
+    "midY": 199.0,
+    "minX": 20.0,
+    "text": "house 3rd floor, Nations,   |  Rechnungsdatum:   |  12.08.2020"
+  },
+  {
+    "maxX": 623.0,
+    "midY": 217.33333,
+    "minX": 19.0,
+    "text": "201 Wigmore St   |  Fälligkeitsdatum:   |  20.08.2020"
+  },
+  {
+    "maxX": 622.0,
+    "midY": 236.0,
+    "minX": 20.0,
+    "text": "London W1U 1WH   |  Gesamtbetrag:   |  4.640,00 EUR"
+  },
+  {
+    "maxX": 152.0,
+    "midY": 257.5,
+    "minX": 19.0,
+    "text": "Vereinigtes Königreich"
+  },
+  {
+    "maxX": 127.0,
+    "midY": 324.5,
+    "minX": 20.0,
+    "text": "Rechnung"
+  },
+  {
+    "maxX": 626.0,
+    "midY": 395.0,
+    "minX": 26.0,
+    "text": "Anzahl Position   |  VPE   |  Preis   |  Gesamt"
+  },
+  {
+    "maxX": 626.0,
+    "midY": 419.0,
+    "minX": 84.0,
+    "text": "Kühlschrank, grün, 1000|   |  Stück   |  1.200,00   |  1.200,00"
+  },
+  {
+    "maxX": 626.0,
+    "midY": 442.0,
+    "minX": 61.0,
+    "text": "5   |  Vasen 30cm, farblich sortiert   |  Stück   |  20,00   |  100,00"
+  },
+  {
+    "maxX": 624.0,
+    "midY": 464.5,
+    "minX": 61.0,
+    "text": "5   |  Babysocken   |  20er-Pack   |  50,00   |  250,00"
+  },
+  {
+    "maxX": 626.0,
+    "midY": 488.875,
+    "minX": 61.0,
+    "text": "1 Heckenschere   |  Stück   |  450,00   |  450,00"
+  },
+  {
+    "maxX": 626.0,
+    "midY": 534.0,
+    "minX": 84.0,
+    "text": "Lieferung frei Haus   |  2.000,0o"
+  },
+  {
+    "maxX": 626.0,
+    "midY": 602.0,
+    "minX": 338.0,
+    "text": "Zwischensumme ohne MwSt.   |  4.000,00"
+  },
+  {
+    "maxX": 624.0,
+    "midY": 625.25,
+    "minX": 339.0,
+    "text": "MwSt. 16% auf 4.000,00   |  4.640,00"
+  },
+  {
+    "maxX": 626.0,
+    "midY": 649.0,
+    "minX": 339.0,
+    "text": "Gesamtbetrag in EUR   |  4.640,00"
+  }
+]

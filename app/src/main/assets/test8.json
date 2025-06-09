@@ -1,0 +1,122 @@
+[
+  {
+    "maxX": 532.0,
+    "midY": 122.0,
+    "minX": 123.0,
+    "text": "GRAND LUXCAFE"
+  },
+  {
+    "maxX": 371.0,
+    "midY": 187.0,
+    "minX": 210.0,
+    "text": "Rooseve lt Field"
+  },
+  {
+    "maxX": 403.0,
+    "midY": 214.0,
+    "minX": 70.0,
+    "text": "0480 TABLE 101 #Party 3"
+  },
+  {
+    "maxX": 471.0,
+    "midY": 243.0,
+    "minX": 71.0,
+    "text": "STEPHEN R   |  SvrCk: 4 16:43 04/25/15"
+  },
+  {
+    "maxX": 511.0,
+    "midY": 295.75,
+    "minX": 74.0,
+    "text": "Coffee   |  2.95"
+  },
+  {
+    "maxX": 510.0,
+    "midY": 321.5,
+    "minX": 75.0,
+    "text": "Chicken Parmesan   |  17.95"
+  },
+  {
+    "maxX": 509.0,
+    "midY": 349.25,
+    "minX": 77.0,
+    "text": "Prime Top Sirloin   |  25.95"
+  },
+  {
+    "maxX": 508.0,
+    "midY": 375.25,
+    "minX": 78.0,
+    "text": "The Bacon-Cheese Burger   |  13.95"
+  },
+  {
+    "maxX": 507.0,
+    "midY": 400.5,
+    "minX": 80.0,
+    "text": "Coffee   |  2.95"
+  },
+  {
+    "maxX": 504.0,
+    "midY": 447.75,
+    "minX": 296.0,
+    "text": "Sub Total:   |  63.75"
+  },
+  {
+    "maxX": 503.0,
+    "midY": 470.75,
+    "minX": 380.0,
+    "text": "Tax:   |  5.50"
+  },
+  {
+    "maxX": 500.0,
+    "midY": 492.5,
+    "minX": 296.0,
+    "text": "Sub Total: 69.25"
+  },
+  {
+    "maxX": 499.0,
+    "midY": 518.5,
+    "minX": 85.0,
+    "text": "04/25 17:42 TOTAL:   |  59.25"
+  },
+  {
+    "maxX": 309.0,
+    "midY": 575.0,
+    "minX": 85.0,
+    "text": "Gratuity Not Included"
+  },
+  {
+    "maxX": 285.0,
+    "midY": 602.0,
+    "minX": 85.0,
+    "text": "Suggested Gratuity:"
+  },
+  {
+    "maxX": 310.0,
+    "midY": 626.25,
+    "minX": 173.0,
+    "text": "20%   |  13.85"
+  },
+  {
+    "maxX": 313.0,
+    "midY": 654.0,
+    "minX": 176.0,
+    "text": "18%   |  12.47"
+  },
+  {
+    "maxX": 315.0,
+    "midY": 681.75,
+    "minX": 176.0,
+    "text": "15%   |  10.39"
+  },
+  {
+    "maxX": 482.0,
+    "midY": 734.5,
+    "minX": 119.0,
+    "text": "It\u0027s been a pleasure to serve you."
+  },
+  {
+    "maxX": 456.0,
+    "midY": 761.5,
+    "minX": 153.0,
+    "text": "Thank you for dining with us"
+  }
+]

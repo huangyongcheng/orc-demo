@@ -1,0 +1,128 @@
+[
+  {
+    "maxX": 638.0,
+    "midY": 206.5,
+    "minX": 442.0,
+    "text": "Brand Name"
+  },
+  {
+    "maxX": 587.0,
+    "midY": 227.5,
+    "minX": 441.0,
+    "text": "TAGLINE SPACE HERE"
+  },
+  {
+    "maxX": 1074.0,
+    "midY": 294.0,
+    "minX": 838.0,
+    "text": "INVOICE"
+  },
+  {
+    "maxX": 537.0,
+    "midY": 358.0,
+    "minX": 383.0,
+    "text": "Invoice to:"
+  },
+  {
+    "maxX": 1104.0,
+    "midY": 404.0,
+    "minX": 382.0,
+    "text": "Dwyane Clark   |  24 Dummy Street Area,   |  Invoice#   |  52148"
+  },
+  {
+    "maxX": 1103.0,
+    "midY": 433.66666,
+    "minX": 381.0,
+    "text": "Location, Lorem Ipsum,   |  Date   |  O1 / 02 / 2020"
+  },
+  {
+    "maxX": 463.0,
+    "midY": 451.5,
+    "minX": 381.0,
+    "text": "570xx59x"
+  },
+  {
+    "maxX": 1075.0,
+    "midY": 539.4,
+    "minX": 399.0,
+    "text": "SL.   |  Item Description   |  Price   |  Qty.   |  Total"
+  },
+  {
+    "maxX": 1095.0,
+    "midY": 600.5,
+    "minX": 464.0,
+    "text": "Lorem lpsum Dolor   |  $50.00   |  $50.00"
+  },
+  {
+    "maxX": 1094.0,
+    "midY": 672.6,
+    "minX": 406.0,
+    "text": "2   |  Pellentesque id neque ligula   |  $20.00   |  3   |  $60.00"
+  },
+  {
+    "maxX": 1095.0,
+    "midY": 746.375,
+    "minX": 406.0,
+    "text": "3   |  Interdum et malesuada fames   |  $10.00   |  $20.00"
+  },
+  {
+    "maxX": 1094.0,
+    "midY": 821.125,
+    "minX": 463.0,
+    "text": "Vivamus volutpat faucibus   |  $90.00   |  1   |  $90.00"
+  },
+  {
+    "maxX": 1104.0,
+    "midY": 1040.8334,
+    "minX": 383.0,
+    "text": "Thank you for your business   |  Sub Total:   |  $220.00"
+  },
+  {
+    "maxX": 1083.0,
+    "midY": 1069.25,
+    "minX": 877.0,
+    "text": "Tax:   |  0.00%"
+  },
+  {
+    "maxX": 562.0,
+    "midY": 1093.5,
+    "minX": 381.0,
+    "text": "Terms \u0026 Conditions"
+  },
+  {
+    "maxX": 1102.0,
+    "midY": 1126.625,
+    "minX": 382.0,
+    "text": "Lorom ipsum dolor sit amot, consoctotur adipiscing   |  elit. Fusce dignissim pretlum consectetur.   |  Total:   |  $220.00"
+  },
+  {
+    "maxX": 508.0,
+    "midY": 1178.0,
+    "minX": 382.0,
+    "text": "Payment Info:"
+  },
+  {
+    "maxX": 565.0,
+    "midY": 1200.25,
+    "minX": 381.0,
+    "text": "Account #:   |  1234 5678 9012"
+  },
+  {
+    "maxX": 612.0,
+    "midY": 1225.75,
+    "minX": 381.0,
+    "text": "AfC Name:   |  Bank Dotails:   |  Add your bank details   |  Lorem lpsum"
+  },
+  {
+    "maxX": 1060.0,
+    "midY": 1302.0,
+    "minX": 912.0,
+    "text": "Authorised Sign"
+  },
+  {
+    "maxX": 714.0,
+    "midY": 1319.5,
+    "minX": 388.0,
+    "text": "Phone #   |  Address | Website"
+  }
+]

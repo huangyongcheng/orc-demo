@@ -1,15 +1,236 @@
-{
-  "name": "John Doe",
-  "age": 30,
-  "isStudent": false,
-  "address": {
-    "street": "123 Main St",
-    "city": "New York",
-    "zipCode": "10001"
+[
+  {
+    "maxX": 657.0,
+    "midY": 335.5,
+    "minX": 395.0,
+    "text": "KATL"
   },
-  "hobbies": ["reading", "hiking", "photography"],
-  "contact": {
-    "email": "john.doe@example.com",
-    "phone": "+1 (555) 123-4567"
+  {
+    "maxX": 659.0,
+    "midY": 495.5,
+    "minX": 388.0,
+    "text": "der bäcker"
+  },
+  {
+    "maxX": 679.0,
+    "midY": 602.0,
+    "minX": 238.0,
+    "text": "Katz der bäcker GmbH"
+  },
+  {
+    "maxX": 719.0,
+    "midY": 659.0,
+    "minX": 216.0,
+    "text": "Fil.: 046 LB-Kaffeemarkt"
+  },
+  {
+    "maxX": 688.0,
+    "midY": 721.0,
+    "minX": 228.0,
+    "text": "SteuerNr.:55081/18053"
+  },
+  {
+    "maxX": 655.0,
+    "midY": 775.5,
+    "minX": 263.0,
+    "text": "Tel.:07141-9470088"
+  },
+  {
+    "maxX": 687.0,
+    "midY": 971.5,
+    "minX": 226.0,
+    "text": "Bestellung Nr.: 8468"
+  },
+  {
+    "maxX": 707.0,
+    "midY": 1097.0,
+    "minX": 53.0,
+    "text": "RECHNUNG #2504290046 0058 0488"
+  },
+  {
+    "maxX": 294.0,
+    "midY": 1208.5,
+    "minX": 54.0,
+    "text": "Artikelname"
+  },
+  {
+    "maxX": 945.0,
+    "midY": 1275.0,
+    "minX": 122.0,
+    "text": "Menge Einheit   |  Einzel   |  Gesamt"
+  },
+  {
+    "maxX": 317.0,
+    "midY": 1443.5,
+    "minX": 56.0,
+    "text": "Rübli-Muffin"
+  },
+  {
+    "maxX": 968.0,
+    "midY": 1506.3334,
+    "minX": 157.0,
+    "text": "6,00 Stück x   |  2,40   |  14,40 B"
+  },
+  {
+    "maxX": 928.0,
+    "midY": 1620.25,
+    "minX": 55.0,
+    "text": "GesamtsUmMe:   |  14,40"
+  },
+  {
+    "maxX": 925.0,
+    "midY": 1735.25,
+    "minX": 57.0,
+    "text": "Gegeben Kartenzahlung:   |  14,40"
+  },
+  {
+    "maxX": 925.0,
+    "midY": 1789.75,
+    "minX": 58.0,
+    "text": "Zurück:   |  0,00"
+  },
+  {
+    "maxX": 947.0,
+    "midY": 1904.625,
+    "minX": 102.0,
+    "text": "MuSt:   |  Netto   |  MwSt.   |  Brutto"
+  },
+  {
+    "maxX": 903.0,
+    "midY": 1961.5,
+    "minX": 146.0,
+    "text": "%   |  €   |  €"
+  },
+  {
+    "maxX": 903.0,
+    "midY": 2019.8334,
+    "minX": 58.0,
+    "text": "B 7,00   |  13,46   |  0,94 14,40"
+  },
+  {
+    "maxX": 706.0,
+    "midY": 2130.0,
+    "minX": 59.0,
+    "text": "Es bediente Sie L. KOLJNREKAJ"
+  },
+  {
+    "maxX": 899.0,
+    "midY": 2185.5,
+    "minX": 57.0,
+    "text": "Datum   |  Filiale:   |  Kasse:"
+  },
+  {
+    "maxX": 917.0,
+    "midY": 2240.25,
+    "minX": 56.0,
+    "text": "29.04.2025 13:37 Unr 0046   |  K-046-1"
+  },
+  {
+    "maxX": 770.0,
+    "midY": 2353.0,
+    "minX": 130.0,
+    "text": "Vielen Dank für Ihren Einkuf."
+  },
+  {
+    "maxX": 946.0,
+    "midY": 2405.5,
+    "minX": 62.0,
+    "text": "Wir freuen uns auf Thren nächsten Besuch."
+  },
+  {
+    "maxX": 715.0,
+    "midY": 2519.0,
+    "minX": 196.0,
+    "text": "wir machet al les se lber.."
+  },
+  {
+    "maxX": 715.0,
+    "midY": 2575.0,
+    "minX": 172.0,
+    "text": ".. und zwar ohne Ausnahme!"
+  },
+  {
+    "maxX": 647.0,
+    "midY": 2631.5,
+    "minX": 262.0,
+    "text": "Bleiben Sie gesund"
+  },
+  {
+    "maxX": 424.0,
+    "midY": 2803.0,
+    "minX": 55.0,
+    "text": "ClientID: 1114K58"
+  },
+  {
+    "maxX": 481.0,
+    "midY": 2857.5,
+    "minX": 67.0,
+    "text": "TSE-Beleg-Nr: 650201"
+  },
+  {
+    "maxX": 961.0,
+    "midY": 2913.5,
+    "minX": 55.0,
+    "text": "Serienmummer TSE: A0C86B1E7355C7E49E560BDC"
+  },
+  {
+    "maxX": 917.0,
+    "midY": 2969.5,
+    "minX": 56.0,
+    "text": "FBCA93FF63021492B36FBE5D452B9A07149ADO76"
+  },
+  {
+    "maxX": 961.0,
+    "midY": 3026.0,
+    "minX": 56.0,
+    "text": "Lizenz Kasse: 07NZ-DV80E-OUOHF-H4245-813V"
+  },
+  {
+    "maxX": 551.0,
+    "midY": 3143.0,
+    "minX": 53.0,
+    "text": "Signaturzähler: 1390930"
+  },
+  {
+    "maxX": 811.0,
+    "midY": 3198.5,
+    "minX": 63.0,
+    "text": "Startzeitpunkt: 29.04.2025 11:36:40"
+  },
+  {
+    "maxX": 941.0,
+    "midY": 3252.5,
+    "minX": 61.0,
+    "text": "Beendigungszeitpunkt: 29.04. 2025 11:37:58"
+  },
+  {
+    "maxX": 971.0,
+    "midY": 3311.0,
+    "minX": 53.0,
+    "text": "Prüfwert: J1RA/OY6CSXvK/KDLb7IStRgV63R9Bay"
+  },
+  {
+    "maxX": 962.0,
+    "midY": 3369.5,
+    "minX": 52.0,
+    "text": "C/ZThDCufwj6oLfNY1QYT97c7yAnUSrjMYcV2W5aPX"
+  },
+  {
+    "maxX": 962.0,
+    "midY": 3425.5,
+    "minX": 66.0,
+    "text": "oCD+9 eZBhozdgqwk YP i5AHLXXOf+7Ra73203nBYR+"
+  },
+  {
+    "maxX": 310.0,
+    "midY": 3490.0,
+    "minX": 54.0,
+    "text": "todvyG8B0xA4"
+  },
+  {
+    "maxX": 686.0,
+    "midY": 3599.5,
+    "minX": 347.0,
+    "text": "TSE Information:"
   }
-}
+]

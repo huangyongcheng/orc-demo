@@ -7,7 +7,31 @@
         android:id="@+id/selectImageBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Invoice from Gallery" />
+        android:text="Test 1" />
+
+    <Button
+        android:id="@+id/selectImageBtn2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test 2" />
+
+    <Button
+        android:id="@+id/selectImageBtn3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test 3" />
+
+    <Button
+        android:id="@+id/selectImageBtn4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test 4" />
+
+    <Button
+        android:id="@+id/selectImageBtnAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test all" />
 
     <ImageView
         android:id="@+id/imageView"
