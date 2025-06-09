@@ -32,14 +32,15 @@ object InvoiceItemUtil {
         )
 
         for (pattern in datePatterns) {
-            val regex = Regex(pattern
-                .replace(".", "\\.")
-                .replace("/", "\\/")
-                .replace("dd", "\\d{2}")
-                .replace("MM", "\\d{2}")
-                .replace("yyyy", "\\d{4}")
-                .replace("HH", "\\d{2}")
-                .replace("mm", "\\d{2}")
+            val regex = Regex(
+                pattern
+                    .replace(".", "\\.")
+                    .replace("/", "\\/")
+                    .replace("dd", "\\d{2}")
+                    .replace("MM", "\\d{2}")
+                    .replace("yyyy", "\\d{4}")
+                    .replace("HH", "\\d{2}")
+                    .replace("mm", "\\d{2}")
             )
             val match = regex.find(text)
             if (match != null) {
@@ -48,7 +49,8 @@ object InvoiceItemUtil {
                 try {
                     sdf.parse(match.value)
                     return true
-                } catch (_: Exception) { }
+                } catch (_: Exception) {
+                }
             }
         }
         return false
@@ -86,43 +88,36 @@ object InvoiceItemUtil {
     //→ "Do not check based on the ':' character"
     //→ "Do not check if the name is allowed to start with a number"
 
-    fun isInvoiceItem(text:String):Boolean {
-//        if(text.contains("*6,50 EUR   |  A,1")){
-//            Log.e("Suong","text: "+ text)
-//        }
-        if (text.contains(" | ")) {
+    fun isInvoiceItem(text: String): Boolean {
+
+        if (text.contains(SEPARATE_ITEM_PART)) {
             // Rule 1: exclude keywords related to payment and totals
             val nonItemKeywords = listOf(
                 "gesamtsumme", "zahlung", "gegeben", "betrag", "summe",
-                "kartenzahlung", "total", "wechselgeld", "bezahlt", "change","gesamt","mwst","datum",
-                "visa","beleg-nr.","beleg nummer","belegnummer","genehmigung",
-                "terminalnummer","zurück","tax:","lieferung","ust.","umsatzsteuer",
+                "kartenzahlung", "total", "wechselgeld", "bezahlt", "change", "gesamt", "mwst", "datum",
+                "visa", "beleg-nr.", "beleg nummer", "belegnummer", "genehmigung",
+                "terminalnummer", "zurück", "tax:", "lieferung", "ust.", "umsatzsteuer",
                 "=",
                 "%" // remove if need check VAT
             )
             if (nonItemKeywords.any { text.lowercase(Locale.ROOT).contains(it) }) return false
 
-            // Rule 2: contains common keywords found in item lines
-            val itemKeywords = listOf("stück", "einheit",  "einzel", "artikel", "qty")
-            if (itemKeywords.any { text.contains(it) }) {
-                return true
-            }
 
-            // Rule 3 If the line contains this list of keywords, it is not an invoice item
+            // Rule 2 If the line contains this list of keywords, it is not an invoice item
             // Tax: => false
-            val equalKeyWord = listOf("tax:","tax","cash","cash tendered:")
+            val equalKeyWord = listOf("tax:", "tax", "cash", "cash tendered:", "net")
             val parts = text.split(Regex(SEPARATE_ITEM_PART)).map { it.trim() }
-            val hasEqualKeyWord = parts.any {part-> equalKeyWord.any { it.equals(part.trim(), true) } }
-            if(hasEqualKeyWord){
+            val hasEqualKeyWord = parts.any { part -> equalKeyWord.any { it.equals(part.trim(), true) } }
+            if (hasEqualKeyWord) {
                 return false
             }
 
-            // Rule 4: contains format of quantity + unit price + total price (with comma or dot)
+            // Rule 3: contains format of quantity + unit price + total price (with comma or dot)
             val hasCurrency = Regex("\\d{1,3}[.,]\\d{2}").containsMatchIn(text)
-            if(hasCurrency){
+            if (hasCurrency) {
 
-               // val parts = text.split(Regex("""\s+\|\s+""")).map { it.trim() }
-                if(parts.size>1) {
+                // val parts = text.split(Regex("""\s+\|\s+""")).map { it.trim() }
+                if (parts.size > 1) {
                     val hasMoreLettersThanDigits = parts.all { hasMoreLettersThanDigits(it) }
                     if (hasMoreLettersThanDigits) {  // If the string contains more letters than digits, it is not an invoice item
                         return false
@@ -139,8 +134,7 @@ object InvoiceItemUtil {
                         } else if (parts.all { isNumericWithoutLetters(it.trim()) }) {
                             // If no text is found in the string, it is not an invoice item
                             return false
-                        }
-                        else {
+                        } else {
                             return true
                         }
 
@@ -149,13 +143,6 @@ object InvoiceItemUtil {
                     return false
                 }
             }
-
-            // Rule 5: line contains unit indicators like “x”, “kg”, “Stück”, etc.
-//            val unitIndicators = listOf("stück", "packung", "flasche")
-//            if (unitIndicators.any { text.contains(it) }) {
-//                return true
-//            }
-
 
         }
 
@@ -176,6 +163,7 @@ object InvoiceItemUtil {
     }
 
 
+    // *000005 Diesel Fuel Save 53,15 EUR #A* => Diesel Fuel Save 53,15 EUR A
     private fun cleanTextKeepName(text: String?): String? {
 
         // Keep letters, digits, whitespace, comma, dot
@@ -208,7 +196,7 @@ object InvoiceItemUtil {
         }
 
         if (result.isNotEmpty()) {
-            return result.joinToString(" ")
+            return cleanDotsAndCommas(result.joinToString(" "))
         }
 
         val indexDot = text.lastIndexOf('.')
@@ -221,10 +209,19 @@ object InvoiceItemUtil {
                 .dropWhile { it.matches(Regex("""[\d.,\W_]+""")) }
                 .joinToString(" ")
 
-            return cleaned
+            return cleanDotsAndCommas(cleaned)
         }
 
         return ""
+    }
+
+    // reiniger PowerGel, => reiniger PowerGel
+    private fun cleanDotsAndCommas(text: String?): String {
+        if (text.isNullOrBlank()) return ""
+
+        return text
+            .replace(Regex("^[.,\\s]+"), "")
+            .replace(Regex("[.,\\s]+$"), "")
     }
 
     // Check quantity
@@ -248,13 +245,13 @@ object InvoiceItemUtil {
         val parts = line.split(Regex("""\s+\|\s+""")).map { it.trim() }
         if (parts.size < 2) return InvoiceItem()
 
-        if(line.contains("reiniger")){
-            Log.e("Suong",line)
+        if (line.contains("reiniger")) {
+            Log.e("Suong", line)
         }
 
         var price: String? = null
-        var indexPrice:Int = parts.size - 1
-       // Check price is invalid number if not get the next last one
+        var indexPrice: Int = parts.size - 1
+        // Check price is invalid number if not get the next last one
         for (i in 1..parts.size) {
             val candidate = extractNumberOnly(parts[parts.size - i])
             if (isValidNumber(candidate)) {
@@ -264,36 +261,37 @@ object InvoiceItemUtil {
             }
         }
 
-        var name:String?=""
-        var quantity:String? = null
-        parts.forEachIndexed{index, item->
+        var name: String? = ""
+        var quantity: String? = null
+        parts.forEachIndexed { index, item ->
             val extractQuantity = extractQuantityIfPresent(item) // check part have quantity
-            if(extractQuantity.first){
+            if (extractQuantity.first) {
                 quantity = extractQuantity.second
             } else {
-                if(index <= indexPrice){
-                    if(!isValidNumber(item)) { // only add with letter, ignore number
+                if (index <= indexPrice) {
+                    if (!isValidNumber(item)) { // only add with letter, ignore number
                         name = "$name $item"
                     }
                 }
             }
         }
 
-        val cleanedName= extractTextBeforeFirstNumber(cleanTextKeepName(name?.trim()))
+        val cleanedName = extractTextBeforeFirstNumber(cleanTextKeepName(name?.trim()))
         return InvoiceItem(
             name = cleanedName,
             quantity = quantity?.trim(),
-            totalPrice = extractNumberOnly(price?.trim()))
+            totalPrice = extractNumberOnly(price?.trim())
+        )
     }
 
     data class InvoiceItem(
-        val name: String?=null,
-        val quantity:String?=null,
-        val totalPrice: String?=null
+        val name: String? = null,
+        val quantity: String? = null,
+        val totalPrice: String? = null
     )
 
 
-     fun convert2InvoiceItem(itemInvoices: List<MLActivity.LayoutLine>) : MutableList<InvoiceItem>{
+    fun convert2InvoiceItem(itemInvoices: List<MLActivity.LayoutLine>): MutableList<InvoiceItem> {
         val listItems = mutableListOf<InvoiceItem>()
         itemInvoices.forEach {
             listItems.add(convertToInvoiceItem(it.text))
