@@ -13,6 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.orcdemo2.R
+import com.example.orcdemo2.ml.InvoiceItemUtil.SEPARATE_ITEM_PART
+import com.example.orcdemo2.ml.InvoiceItemUtil.convertToInvoiceItem
 import com.example.orcdemo2.ml.InvoiceItemUtil.isInvoiceItem
 import com.example.orcdemo2.ml.demo.LayoutExtractor
 import com.example.orcdemo2.ml.demo.LayoutSectionType
@@ -119,6 +121,14 @@ class MLActivity : Activity() {
         }
     }
 
+    private fun convert2InvoiceItem(itemInvoices: List<LayoutLine>) : MutableList<InvoiceItemUtil.InvoiceItem>{
+        val listItems = mutableListOf<InvoiceItemUtil.InvoiceItem>()
+        itemInvoices.forEach {
+            listItems.add(convertToInvoiceItem(it.text))
+        }
+        return listItems
+    }
+
     private fun testInvoiceOrc() {
         val allFiles = assets.list("")
         allFiles?.filter { it.startsWith("test") }?.forEach {
@@ -127,13 +137,53 @@ class MLActivity : Activity() {
             val list = readProductsFromAssets(this@MLActivity, it)
 
             val listinvoce = mutableListOf<LayoutLine>()
-            for (layoutLine in list) {
+//            for (layoutLine in list) {
+//
+//                if (isInvoiceItem(layoutLine.text)) {
+//                    listinvoce.add(layoutLine)
+//                }
+//            }
+            list.forEachIndexed { index, layoutLine ->
+
+                // Debug: check specific line
+                if (layoutLine.text.contains("6,00 Stück x")) {
+                    Log.e("Suong", "layoutLine: ${layoutLine}")
+                }
 
                 if (isInvoiceItem(layoutLine.text)) {
-                    listinvoce.add(layoutLine)
+                    if (index > 0) {
+                        val previousLayoutLine = list[index - 1]
+                        val previousParts = previousLayoutLine.text.split(Regex("""\s+\|\s+""")).map { it.trim() }
+
+                        // If the previous line has only one part and the current line is visually more right-aligned
+                        val shouldCombine = previousParts.size == 1 && layoutLine.minX > previousLayoutLine.minX
+
+                        if (shouldCombine) {
+                            // Combine the previous and current layout lines into one invoice item
+                            val combinedText = "${previousLayoutLine.text}$SEPARATE_ITEM_PART${layoutLine.text}"
+                            val combinedLayoutLine = LayoutLine(
+                                text = combinedText,
+                                midY = previousLayoutLine.midY,
+                                minX = previousLayoutLine.minX,
+                                maxX = previousLayoutLine.maxX
+                            )
+                            listinvoce.add(combinedLayoutLine)
+                        } else {
+                            // Add current layout line directly if no need to combine
+                            listinvoce.add(layoutLine)
+                        }
+
+                    } else {
+                        // First item, no previous line to compare
+                        listinvoce.add(layoutLine)
+                    }
                 }
             }
-            writeToFile(this@MLActivity, "result_${it}", Gson().toJson(listinvoce))
+            writeToFile(this@MLActivity, "result_${it}",
+                Gson().toJson(listinvoce))
+            writeToFile(this@MLActivity, "result_${it}_item",
+                Gson().toJson(InvoiceItemUtil.convert2InvoiceItem(listinvoce)))
+
         }
     }
 
@@ -560,107 +610,6 @@ class MLActivity : Activity() {
     }
 
 
-    fun parseInvoiceItems(text: String): List<InvoiceItem> {
-        val items = mutableListOf<InvoiceItem>()
-        val lines = text.split("\n")
-
-        // Example: Find lines containing product name, quantity, and price
-        val pattern = Regex("""([A-Za-z-]+)\s+([\d,]+)\s+([A-Za-z]+)\s+x\s+([\d,]+)\s+([\d,]+)""")
-
-        lines.forEach { line ->
-            val match = pattern.find(line)
-            match?.let {
-                val (name, qty, unit, price, total) = it.destructured
-                items.add(
-                    InvoiceItem(
-                        name.trim(),
-                        qty.replace(",", ".").toDouble(),
-                        unit.trim(),
-                        price.replace(",", ".").toDouble(),
-                        total.replace(",", ".").toDouble()
-                    )
-                )
-            }
-        }
-        return items
-    }
-
-    data class InvoiceItem(
-        val name: String,
-        val quantity: Double,
-        val unit: String,
-        val unitPrice: Double,
-        val totalPrice: Double
-    ) {
-        override fun toString(): String {
-            return "Item: $name | Qty: $quantity $unit | Price: $unitPrice€ | Total: $totalPrice€"
-        }
-    }
-
-    ///
-
-    private var invoiceParser: InvoiceParser? = null
-
-    fun processInvoice(imageUri: Uri) {
-        val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
-        val items = invoiceParser?.detectItems(bitmap)
-        Log.e("Suong","items "+  items.toString())
-//        _invoiceItems.value = items.map { item ->
-//            InvoiceItem(
-//                name = extractTextFromBoundingBox(bitmap, item.boundingBox),
-//                quantity = item.quantity,
-//                unit = "Stück",  // Extract from OCR
-//                unitPrice = item.unitPrice,
-//                totalPrice = item.unitPrice * item.quantity
-//            )
-//        }
-    }
 
 
-    fun processInvoiceText(ocrText: String) {
-        // Step 1: Tokenize the text (use WordPiece tokenizer)
-        val tokenizer = MyTokenizer.loadFromAssets(assets, "vocab5.txt")
-        val (inputIds, attentionMask, tokens) = tokenizer.tokenize(ocrText, maxLen = 128)
-
-        // Step 2: Run TFLite model
-        val model = ModelWrapper(assets, "bert_ner5.tflite", maxSeqLen = 128)
-        val predictedLabels = model.predict(inputIds, attentionMask)
-
-        // Step 3: Extract entities
-        val entities = model.extractEntities(tokens, predictedLabels)
-
-        // Step 4: Show items
-        val items = entities["ITEM"] ?: emptyList()
-        Log.e("ExtractedItems", items.joinToString("\n"))
-    }
-
-
-
-    private fun parseLineItems(text: String) {
-        val lineItems = mutableListOf<Map<String, String>>()
-        val lines = text.split("\n")
-
-        // Simple regex to match line items (adjust based on invoice format)
-        val lineItemPattern = Regex("^(.*?)\\s+(\\d+)\\s+([\\d.]+)\\s+([\\d.]+)$")
-
-        for (line in lines) {
-            val match = lineItemPattern.find(line.trim())
-            if (match != null) {
-                val (description, quantity, unitPrice, total) = match.destructured
-                val item = mapOf(
-                    "description" to description.trim(),
-                    "quantity" to quantity,
-                    "unitPrice" to unitPrice,
-                    "total" to total
-                )
-                lineItems.add(item)
-            }
-        }
-
-        // Log or process extracted line items
-        lineItems.forEach { item ->
-            Log.e("LineItem", "Description: ${item["description"]}, Qty: ${item["quantity"]}, " +
-                    "Unit Price: ${item["unitPrice"]}, Total: ${item["total"]}")
-        }
-    }
 }
