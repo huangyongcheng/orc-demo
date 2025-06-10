@@ -19,8 +19,6 @@ import com.example.orcdemo2.ml.InvoiceItemUtil.isInvoiceItem
 import com.example.orcdemo2.ml.demo.LayoutExtractor
 import com.example.orcdemo2.ml.demo.LayoutSectionType
 import com.example.orcdemo2.ml.demo.SectionClassifier
-import com.example.orcdemo2.ml.tflite.ModelWrapper
-import com.example.orcdemo2.ml.tflite.MyTokenizer
 import com.example.orcdemo2.ml.tflite2.ImageClassifier
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -134,16 +132,16 @@ class MLActivity : Activity() {
         allFiles?.filter { it.startsWith("test") }?.forEach {
 
 
-            val list = readProductsFromAssets(this@MLActivity, it)
+            val listORC = readProductsFromAssets(this@MLActivity, it)
 
-            val listinvoce = mutableListOf<LayoutLine>()
+            val invoiceItems = mutableListOf<LayoutLine>()
 //            for (layoutLine in list) {
 //
 //                if (isInvoiceItem(layoutLine.text)) {
 //                    listinvoce.add(layoutLine)
 //                }
 //            }
-            list.forEachIndexed { index, layoutLine ->
+            listORC.forEachIndexed { index, layoutLine ->
 
                 // Debug: check specific line
                 if (layoutLine.text.contains("6,00 Stück x")) {
@@ -152,7 +150,7 @@ class MLActivity : Activity() {
 
                 if (isInvoiceItem(layoutLine.text)) {
                     if (index > 0) {
-                        val previousLayoutLine = list[index - 1]
+                        val previousLayoutLine = listORC[index - 1]
                         val previousParts = previousLayoutLine.text.split(Regex("""\s+\|\s+""")).map { it.trim() }
 
                         // If the previous line has only one part and the current line is visually more right-aligned
@@ -167,22 +165,22 @@ class MLActivity : Activity() {
                                 minX = previousLayoutLine.minX,
                                 maxX = previousLayoutLine.maxX
                             )
-                            listinvoce.add(combinedLayoutLine)
+                            invoiceItems.add(combinedLayoutLine)
                         } else {
                             // Add current layout line directly if no need to combine
-                            listinvoce.add(layoutLine)
+                            invoiceItems.add(layoutLine)
                         }
 
                     } else {
                         // First item, no previous line to compare
-                        listinvoce.add(layoutLine)
+                        invoiceItems.add(layoutLine)
                     }
                 }
             }
             writeToFile(this@MLActivity, "result_${it}",
-                Gson().toJson(listinvoce))
+                Gson().toJson(invoiceItems))
             writeToFile(this@MLActivity, "result_${it}_item",
-                Gson().toJson(InvoiceItemUtil.convert2InvoiceItem(listinvoce)))
+                Gson().toJson(InvoiceItemUtil.convert2InvoiceData(invoiceItems, listORC)))
 
         }
     }

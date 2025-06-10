@@ -1,6 +1,7 @@
 package com.example.orcdemo2.ml.demo
 
 import android.util.Log
+import com.example.orcdemo2.ml.InvoiceItemUtil.SEPARATE_ITEM_PART
 import com.google.gson.Gson
 import com.google.mlkit.vision.text.Text
 
@@ -79,7 +80,7 @@ fun groupLinesByY2(lines: List<LayoutLine>, threshold: Float = 20f): List<Layout
 // Hàm gộp nhiều LayoutLine thành 1 LayoutLine
 private fun mergeLines(group: List<LayoutLine>): LayoutLine {
     val sortedGroup = group.sortedBy { it.minX }
-    val text = sortedGroup.joinToString("   |  ") { it.text }
+    val text = sortedGroup.joinToString(SEPARATE_ITEM_PART) { it.text }
     val midY = sortedGroup.map { it.midY }.average().toFloat()
     val minX = sortedGroup.minOf { it.minX }
     val maxX = sortedGroup.maxOf { it.maxX }

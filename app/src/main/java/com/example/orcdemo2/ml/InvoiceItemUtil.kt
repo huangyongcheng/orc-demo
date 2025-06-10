@@ -4,6 +4,9 @@ import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+//→ "Do not check based on the ':' character"
+//→ "Do not check if the name is allowed to start with a number"
+// dấu gạch ngang (-) trong name vẫn giữa lại
 object InvoiceItemUtil {
 
     const val SEPARATE_ITEM_PART = "   |  "
@@ -85,12 +88,16 @@ object InvoiceItemUtil {
     }
 
 
-    //→ "Do not check based on the ':' character"
-    //→ "Do not check if the name is allowed to start with a number"
+
 
     fun isInvoiceItem(text: String): Boolean {
 
         if (text.contains(SEPARATE_ITEM_PART)) {
+            if(text.contains("A 7%"))
+            {
+                Log.e("Suong",text)
+            }
+
             // Rule 1: exclude keywords related to payment and totals
             val nonItemKeywords = listOf(
                 "gesamtsumme", "zahlung", "gegeben", "betrag", "summe",
@@ -167,8 +174,7 @@ object InvoiceItemUtil {
     private fun cleanTextKeepName(text: String?): String? {
 
         // Keep letters, digits, whitespace, comma, dot
-        val noSpecialChars = text?.replace(Regex("""[^\w\sÀ-ỹ,\.]"""), "")
-
+        val noSpecialChars = text?.replace(Regex("""[^\w\sÀ-ỹ,.\-]"""), "")
         // Split into words
         val words = noSpecialChars?.trim()?.split(Regex("\\s+"))
 
@@ -287,16 +293,80 @@ object InvoiceItemUtil {
     data class InvoiceItem(
         val name: String? = null,
         val quantity: String? = null,
-        val totalPrice: String? = null
+        val totalPrice: String? = null,
+    )
+
+    data class InvoiceData(
+        val vat: String? = null,
+        val total: String? = null,
+        val items: List<InvoiceItem>? = null
     )
 
 
-    fun convert2InvoiceItem(itemInvoices: List<MLActivity.LayoutLine>): MutableList<InvoiceItem> {
+    fun convert2InvoiceItem(itemInvoices: List<MLActivity.LayoutLine>): List<InvoiceItem> {
         val listItems = mutableListOf<InvoiceItem>()
         itemInvoices.forEach {
             listItems.add(convertToInvoiceItem(it.text))
         }
         return listItems
     }
+
+    fun convert2InvoiceData(itemInvoices: List<MLActivity.LayoutLine>,
+                            ocrTexts: List<MLActivity.LayoutLine>
+    ):InvoiceData{
+
+        val lineVat = ocrTexts.find { getVatFromLine(it.text) !=null }
+        return InvoiceData(
+            items = convert2InvoiceItem(itemInvoices),
+            vat = getVatFromLine(lineVat?.text)
+        )
+
+    }
+
+    // VAT
+    private fun getVatFromLine(line: String?): String? {
+        //  if(text.any { it == })
+        // val parts = line.split(Regex("""\s+\|\s+""")).map { it.trim() }
+
+        if(line?.contains("19 % USt. auf € 1.875,00 ") ==true){
+            Log.e("Suong",line)
+        }
+        val parts = line?.split(Regex(SEPARATE_ITEM_PART))?.map { it.trim() }
+        val vat = parts?.find { containsVatPercentage(it) }
+        if(vat !=null) {
+            return cleanVatText( vat)
+        }
+        return null
+    }
+
+    private fun containsVatPercentage(text: String): Boolean {
+        val trimmed = text.trim()
+
+        // Trường hợp chỉ có dấu %
+        if (trimmed == "%") return true
+
+        // Regex kiểm tra số (nguyên hoặc thập phân với , hoặc .) đứng ngay trước dấu %
+        //val regex = Regex("""\b\d{1,3}([.,]\d+)?%""")
+        val regex = Regex("""\b\d{1,3}([.,]\d+)?\s*%""")
+
+
+        return regex.containsMatchIn(trimmed)
+    }
+
+    //A:19,00% => 19,00%
+    private fun cleanVatText(input: String): String {
+
+        val startFromDigit = input.dropWhile { !it.isDigit() }
+        val cleaned = startFromDigit.replace(Regex("""[^0-9,%.]"""), "")
+        val percentIndex = cleaned.indexOf('%')
+        return if (percentIndex != -1) {
+            cleaned.substring(0, percentIndex + 1)
+        } else {
+            cleaned
+        }
+
+
+    }
+
 
 }
