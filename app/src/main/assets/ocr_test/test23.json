@@ -1,0 +1,104 @@
+[
+  {
+    "maxX": 1260.0,
+    "midY": 28.5,
+    "minX": 852.0,
+    "text": "Palcat Hercher"
+  },
+  {
+    "maxX": 1368.0,
+    "midY": 163.0,
+    "minX": 737.0,
+    "text": "abogen   |  Group"
+  },
+  {
+    "maxX": 926.0,
+    "midY": 197.0,
+    "minX": 763.0,
+    "text": "Ch Schot"
+  },
+  {
+    "maxX": 239.0,
+    "midY": 279.5,
+    "minX": 100.0,
+    "text": "Rechnung"
+  },
+  {
+    "maxX": 1138.0,
+    "midY": 323.5,
+    "minX": 98.0,
+    "text": "Deutsche Past AG- 53250 Bonn   |  Rechnungsnummer   |  E000AFDB6B"
+  },
+  {
+    "maxX": 1171.0,
+    "midY": 352.83334,
+    "minX": 98.0,
+    "text": "Hotel Achat Monschau   |  Warenkorb ID   |  77RFNT9YNHSA"
+  },
+  {
+    "maxX": 1116.0,
+    "midY": 377.25,
+    "minX": 830.0,
+    "text": "Rechnungsdatum   |  07.06.2025"
+  },
+  {
+    "maxX": 1116.0,
+    "midY": 402.66666,
+    "minX": 96.0,
+    "text": "Laufenstr. 82   |  Auftragsdatum   |  07.06.2025"
+  },
+  {
+    "maxX": 1051.0,
+    "midY": 433.16666,
+    "minX": 94.0,
+    "text": "52156 Monschau   |  Seite   |  l von l"
+  },
+  {
+    "maxX": 1337.0,
+    "midY": 673.0,
+    "minX": 1145.0,
+    "text": "*USt.: Umsatzsteuer"
+  },
+  {
+    "maxX": 1331.0,
+    "midY": 716.6,
+    "minX": 75.0,
+    "text": "Artikelbezeichnung   |  Menge   |  Einzelpreis   |  USt.   |  Gesamtpreis"
+  },
+  {
+    "maxX": 1335.0,
+    "midY": 740.5,
+    "minX": 980.0,
+    "text": "inkl. USt.*   |  inkl. USt."
+  },
+  {
+    "maxX": 1331.0,
+    "midY": 811.125,
+    "minX": 71.0,
+    "text": "2 kg - Päckchens   |  4,19 €   |  0 %   |  4,19 €"
+  },
+  {
+    "maxX": 1329.0,
+    "midY": 877.5,
+    "minX": 577.0,
+    "text": "Gesamtsumme Netto   |  4,19 €"
+  },
+  {
+    "maxX": 1162.0,
+    "midY": 931.25,
+    "minX": 575.0,
+    "text": "Urnsatzstever O %   |  0,00€"
+  },
+  {
+    "maxX": 1327.0,
+    "midY": 986.25,
+    "minX": 571.0,
+    "text": "Gesamtsurame Brutto   |  4,19 €"
+  },
+  {
+    "maxX": 387.0,
+    "midY": 1130.5,
+    "minX": 58.0,
+    "text": "Vielen Dank für Ihren Auftrag."
+  }
+]

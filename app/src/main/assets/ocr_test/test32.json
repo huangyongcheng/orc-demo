@@ -1,0 +1,236 @@
+[
+  {
+    "maxX": 563.0,
+    "midY": 206.0,
+    "minX": 97.0,
+    "text": "MOHREN-posT"
+  },
+  {
+    "maxX": 408.0,
+    "midY": 272.5,
+    "minX": 232.0,
+    "text": "Herrenstr, 27"
+  },
+  {
+    "maxX": 407.0,
+    "midY": 309.0,
+    "minX": 246.0,
+    "text": "88239 Wángen"
+  },
+  {
+    "maxX": 477.0,
+    "midY": 342.0,
+    "minX": 187.0,
+    "text": "Steuer-Nr 91060/12916"
+  },
+  {
+    "maxX": 489.0,
+    "midY": 376.0,
+    "minX": 152.0,
+    "text": "Telefon: 07522/%978 4949"
+  },
+  {
+    "maxX": 424.0,
+    "midY": 448.0,
+    "minX": 41.0,
+    "text": "Rechnung Nr. 360281"
+  },
+  {
+    "maxX": 462.0,
+    "midY": 517.25,
+    "minX": 40.0,
+    "text": "Datum:04-06.25   |  Tisch 32/-"
+  },
+  {
+    "maxX": 583.0,
+    "midY": 603.8333,
+    "minX": 68.0,
+    "text": "2X Cola 0,4   |  Preis: 3,90   |  7,80"
+  },
+  {
+    "maxX": 583.0,
+    "midY": 680.5,
+    "minX": 69.0,
+    "text": "2X Cola light 0,4   |  Preis:   |  3,90   |  7,80"
+  },
+  {
+    "maxX": 568.0,
+    "midY": 746.0,
+    "minX": 83.0,
+    "text": "1 X Mediterran Flammk   |  Preis:11,80   |  11,80"
+  },
+  {
+    "maxX": 566.0,
+    "midY": 815.6667,
+    "minX": 85.0,
+    "text": "1 X Kalb.Schnitzel-Salat   |  Preis:26,10   |  26,10"
+  },
+  {
+    "maxX": 568.0,
+    "midY": 890.25,
+    "minX": 72.0,
+    "text": "1X Trinkgeld gegeben:   |  Preis   |  6,50   |  6,50"
+  },
+  {
+    "maxX": 352.0,
+    "midY": 1028.375,
+    "minX": 42.0,
+    "text": "Netto(2) Eur   |  + 0,0% MwSt   |  Netto(1) Eur   |  + 19,0% MwSt:   |  44,96   |  8,54   |  6,50   |  0,00"
+  },
+  {
+    "maxX": 441.0,
+    "midY": 1173.75,
+    "minX": 41.0,
+    "text": "Sunne Eur   |  Gegeben Eur   |  60,00   |  60,00"
+  },
+  {
+    "maxX": 537.0,
+    "midY": 1265.0,
+    "minX": 42.0,
+    "text": "Gebucht Kreditkarte   |  Es bediente Sie:   |  ECR Serial:29.10.8833.07.1.1   |  Karin"
+  },
+  {
+    "maxX": 458.0,
+    "midY": 1331.0,
+    "minX": 43.0,
+    "text": "TSE Serial :A0A48388CE04COA2988C"
+  },
+  {
+    "maxX": 457.0,
+    "midY": 1367.5,
+    "minX": 192.0,
+    "text": "5E5FO3DF7C681628FEFA"
+  },
+  {
+    "maxX": 458.0,
+    "midY": 1400.5,
+    "minX": 192.0,
+    "text": "6043C6489D485149A739"
+  },
+  {
+    "maxX": 242.0,
+    "midY": 1431.5,
+    "minX": 193.0,
+    "text": "A8F1"
+  },
+  {
+    "maxX": 472.0,
+    "midY": 1466.0,
+    "minX": 44.0,
+    "text": "Erstbuchung: 04.06.2025 19:36:03"
+  },
+  {
+    "maxX": 595.0,
+    "midY": 1537.5,
+    "minX": 44.0,
+    "text": "VO;29.10.8833.07.1.1;Kassenbeleg-V1;Beleg"
+  },
+  {
+    "maxX": 609.0,
+    "midY": 1571.0,
+    "minX": 49.0,
+    "text": "53.50 _0.00 _0.00_0.00 _6.50°60.00:Unbar;4614"
+  },
+  {
+    "maxX": 607.0,
+    "midY": 1606.5,
+    "minX": 51.0,
+    "text": "29;998889;2025-06-04121:38:03.000Z ;2025-06"
+  },
+  {
+    "maxX": 604.0,
+    "midY": 1639.5,
+    "minX": 47.0,
+    "text": "-04T21:38:03.000Z ;ecdsa-plain-SHA384;un ixT"
+  },
+  {
+    "maxX": 605.0,
+    "midY": 1674.0,
+    "minX": 52.0,
+    "text": "ime;f93T/RSK7202L G6W2Voke8kPYbj NbH/yVNMZSb"
+  },
+  {
+    "maxX": 607.0,
+    "midY": 1708.5,
+    "minX": 47.0,
+    "text": "E/ok3+30wVEEwYxI2K9QoenU6p0JytuICX1Q1DSne0"
+  },
+  {
+    "maxX": 606.0,
+    "midY": 1742.5,
+    "minX": 48.0,
+    "text": "jLcNMINiOIbFAs157Ex9thq+AskxAV57fnnkKn5HPY"
+  },
+  {
+    "maxX": 610.0,
+    "midY": 1776.5,
+    "minX": 53.0,
+    "text": "tMhgcr; BCTrHkkdEsOWEMykXOD/rnj2wpglP/UQ5LR"
+  },
+  {
+    "maxX": 602.0,
+    "midY": 1811.0,
+    "minX": 47.0,
+    "text": "RDXtKXOZVHX0CrKu6Vz99CEecUCPRN3MCCPNOSEHgP"
+  },
+  {
+    "maxX": 607.0,
+    "midY": 1844.5,
+    "minX": 53.0,
+    "text": "Xt1XBevS4BxQlgFb9x086coF JFToJfDGONuppRxWdN"
+  },
+  {
+    "maxX": 221.0,
+    "midY": 1880.0,
+    "minX": 48.0,
+    "text": "qF1/eH3Dk7Q\u003d\u003d"
+  },
+  {
+    "maxX": 382.0,
+    "midY": 1948.5,
+    "minX": 49.0,
+    "text": "Bewirtungsaufwand-Angaben"
+  },
+  {
+    "maxX": 420.0,
+    "midY": 1982.5,
+    "minX": 51.0,
+    "text": "(Par. 4 Abs. 5 Ziff. 2 EStG)"
+  },
+  {
+    "maxX": 299.0,
+    "midY": 2053.5,
+    "minX": 49.0,
+    "text": "Bewirtete Personen:"
+  },
+  {
+    "maxX": 328.0,
+    "midY": 2294.0,
+    "minX": 50.0,
+    "text": "Anlass der Bewirtung:"
+  },
+  {
+    "maxX": 342.0,
+    "midY": 2470.5,
+    "minX": 50.0,
+    "text": "Höhe der Aufwendangen:"
+  },
+  {
+    "maxX": 384.0,
+    "midY": 2571.5,
+    "minX": 55.0,
+    "text": "b. Bewirtg. in Restalrant"
+  },
+  {
+    "maxX": 289.0,
+    "midY": 2679.5,
+    "minX": 56.0,
+    "text": "in anderen Fällen:"
+  },
+  {
+    "maxX": 281.0,
+    "midY": 2860.75,
+    "minX": 51.0,
+    "text": "Ort   |  Datum"
+  }
+]

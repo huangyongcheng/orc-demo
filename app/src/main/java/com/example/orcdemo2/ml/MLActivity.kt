@@ -40,13 +40,14 @@ class MLActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ml)
 
+        /*
         findViewById<Button>(R.id.selectImageBtn).setOnClickListener {
            // pickImageFromGallery()
             val isItem = isInvoiceItem("1\\u003d19,00%   |  10,80   |  9,08   |  1,72")
             //"VU-Nr.   |  4556353644
             Log.e("Suong","istem: "+ isItem)
 
-            val list = readProductsFromAssets(this@MLActivity,"test.json")
+            val list = readProductsFromAssets(this@MLActivity,"ocr_test/test.json")
 
             val listinvoce = mutableListOf<LayoutLine>()
             for (layoutLine in list) {
@@ -60,7 +61,7 @@ class MLActivity : Activity() {
         }
 
         findViewById<Button>(R.id.selectImageBtn2).setOnClickListener {
-            val list = readProductsFromAssets(this@MLActivity,"test2.json")
+            val list = readProductsFromAssets(this@MLActivity,"ocr_test/test2.json")
 
             val listinvoce = mutableListOf<LayoutLine>()
             for (layoutLine in list) {
@@ -73,7 +74,7 @@ class MLActivity : Activity() {
             writeToFile(this@MLActivity,"result2.json",Gson().toJson(listinvoce) )
         }
         findViewById<Button>(R.id.selectImageBtn3).setOnClickListener {
-            val list = readProductsFromAssets(this@MLActivity,"test3.json")
+            val list = readProductsFromAssets(this@MLActivity,"ocr_test/test3.json")
 
             val listinvoce = mutableListOf<LayoutLine>()
             for (layoutLine in list) {
@@ -87,7 +88,7 @@ class MLActivity : Activity() {
         }
 
         findViewById<Button>(R.id.selectImageBtn4).setOnClickListener {
-            val list = readProductsFromAssets(this@MLActivity,"test4.json")
+            val list = readProductsFromAssets(this@MLActivity,"ocr_test/test4.json")
 
             val listinvoce = mutableListOf<LayoutLine>()
             for (layoutLine in list) {
@@ -107,16 +108,11 @@ class MLActivity : Activity() {
             findViewById<Button>(R.id.selectImageBtn4).performClick()
         }
 
+         */
+
        // findViewById<Button>(R.id.selectImageBtnAll).performClick()
         testInvoiceOrc()
 
-
-        try {
-            classifier = ImageClassifier(this)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Toast.makeText(this, "Failed to load model", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun convert2InvoiceItem(itemInvoices: List<LayoutLine>) : MutableList<InvoiceItemUtil.InvoiceItem>{
@@ -128,19 +124,15 @@ class MLActivity : Activity() {
     }
 
     private fun testInvoiceOrc() {
-        val allFiles = assets.list("")
+        filesDir.delete()
+        val allFiles = assets.list("ocr_test")
         allFiles?.filter { it.startsWith("test") }?.forEach {
 
 
-            val listORC = readProductsFromAssets(this@MLActivity, it)
+            val listORC = readProductsFromAssets(this@MLActivity, "ocr_test/$it")
 
             val invoiceItems = mutableListOf<LayoutLine>()
-//            for (layoutLine in list) {
-//
-//                if (isInvoiceItem(layoutLine.text)) {
-//                    listinvoce.add(layoutLine)
-//                }
-//            }
+
             listORC.forEachIndexed { index, layoutLine ->
 
                 // Debug: check specific line
@@ -183,6 +175,7 @@ class MLActivity : Activity() {
                 Gson().toJson(InvoiceItemUtil.convert2InvoiceData(invoiceItems, listORC)))
 
         }
+        mergeJsonFiles(this@MLActivity)
     }
 
     data class InvoiceItem2(
@@ -214,6 +207,48 @@ class MLActivity : Activity() {
             e.printStackTrace() // JSON sai định dạng cũng bắt được
         }
     }
+
+    private fun mergeJsonFiles(context: Context) {
+
+
+        try {
+            val dirFiles = context.filesDir.listFiles()
+
+            if (dirFiles == null) return
+
+            // Lọc và sắp xếp file theo số cuối cùng trong tên file
+            val sortedFiles = dirFiles
+                .filter { it.name.endsWith(".json_item") }
+                .sortedWith(compareBy {
+                    // Tìm số cuối cùng trong tên file, nếu không có thì dùng 0
+                    Regex("(\\d+)").find(it.name)?.groupValues?.last()?.toIntOrNull() ?: 0
+                })
+
+            val stringBuilder = StringBuilder()
+
+            for (file in sortedFiles) {
+                try {
+                    val content = file.readText()
+                    stringBuilder.append("\nFile name: ${file.name}\n")
+                    stringBuilder.append(content.trim())
+                    stringBuilder.append("\n================================\n")
+                } catch (e: Exception) {
+                    e.printStackTrace() // Bỏ qua file lỗi
+                }
+            }
+
+            val result = stringBuilder.toString().trimEnd()
+
+            // Ghi ra file AtestAllFile.json
+            val fos = context.openFileOutput("AtestAllFile.json", Context.MODE_PRIVATE)
+            fos.write(result.toByteArray())
+            fos.close()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     fun readProductsFromAssets(context: Context, fileName: String): List<LayoutLine> {
         val jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
         val gson = Gson()

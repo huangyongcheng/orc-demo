@@ -1,5 +1,6 @@
 package com.example.orcdemo2.ml
 
+import android.text.TextUtils
 import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -231,27 +232,37 @@ object InvoiceItemUtil {
     }
 
     // Check quantity
+    // "2 Stück" =>true, "Stück 2" =>true
     private fun extractQuantityIfPresent(text: String): Pair<Boolean, String?> {
-        val unitKeywords = listOf("stück", "kg", "flasche", "packung", "einheit", "dose", "päckchen")
 
-        // Regex: tìm số nguyên hoặc thập phân có thể dùng dấu ',' hoặc '.'
-        val quantityRegex = Regex("""\b(\d{1,3}(?:[.,]\d{1,2})?)\s*(${unitKeywords.joinToString("|")})\b""", RegexOption.IGNORE_CASE)
+        val unitKeywords = listOf("stück", "kg", "flasche", "packung", "einheit", "dose", "päckchen", "posten:","km")
+        val unitPattern = unitKeywords.joinToString("|")
+
+        val quantityRegex = Regex(
+            """\b(?:($unitPattern)\s*(\d{1,3}(?:[.,]\d{1,2})?)|(\d{1,3}(?:[.,]\d{1,2})?)\s*($unitPattern))\b""",
+            RegexOption.IGNORE_CASE
+        )
 
         val match = quantityRegex.find(text)
+
         return if (match != null) {
-            val quantity = match.groupValues[1]
+            val quantity = match.groupValues[2].ifEmpty { match.groupValues[3] }
             true to quantity
         } else {
             false to null
         }
     }
 
+    fun isPureInteger(input: String): Boolean {
+        val regex = Regex("^\\d+$")
+        return regex.matches(input)
+    }
 
     fun convertToInvoiceItem(line: String): InvoiceItem {
         val parts = line.split(Regex("""\s+\|\s+""")).map { it.trim() }
         if (parts.size < 2) return InvoiceItem()
 
-        if (line.contains("reiniger")) {
+        if (line.contains("Posten")) {
             Log.e("Suong", line)
         }
 
@@ -268,6 +279,7 @@ object InvoiceItemUtil {
         }
 
         var name: String? = ""
+        var indexLastName:Int = 0
         var quantity: String? = null
         parts.forEachIndexed { index, item ->
             val extractQuantity = extractQuantityIfPresent(item) // check part have quantity
@@ -277,9 +289,24 @@ object InvoiceItemUtil {
                 if (index <= indexPrice) {
                     if (!isValidNumber(item)) { // only add with letter, ignore number
                         name = "$name $item"
+                        indexLastName = index
                     }
                 }
             }
+        }
+
+        // ooperation SHFV Namingright   |  1   |  1.875,00   |  19   |  1.875,00
+        // get quantity : 1
+        if (TextUtils.isEmpty(quantity)) {
+            if (indexLastName < (parts.size - 1)) {
+                if (isPureInteger(parts[indexLastName + 1])) {
+                    quantity = parts[indexLastName + 1]
+                }
+            }
+        }
+
+        if (name?.contains("Namingright") == true) {
+            Log.e("Suong", name.toString())
         }
 
         val cleanedName = extractTextBeforeFirstNumber(cleanTextKeepName(name?.trim()))
@@ -303,7 +330,7 @@ object InvoiceItemUtil {
     )
 
 
-    fun convert2InvoiceItem(itemInvoices: List<MLActivity.LayoutLine>): List<InvoiceItem> {
+    private fun convert2InvoiceItem(itemInvoices: List<MLActivity.LayoutLine>): List<InvoiceItem> {
         val listItems = mutableListOf<InvoiceItem>()
         itemInvoices.forEach {
             listItems.add(convertToInvoiceItem(it.text))
@@ -311,24 +338,48 @@ object InvoiceItemUtil {
         return listItems
     }
 
+    private fun mergeVATLine(lineVATUnit: MLActivity.LayoutLine, lineVATValue: MLActivity.LayoutLine):MLActivity.LayoutLine{
+        val headerParts = lineVATUnit.text.split(SEPARATE_ITEM_PART).map { it.trim() }
+        val valueParts = lineVATValue.text.split(SEPARATE_ITEM_PART).map { it.trim() }
+
+        val merged = valueParts.mapIndexed { index, value ->
+            val suffix = headerParts.getOrNull(index)?.takeIf { it.isNotEmpty() } ?: ""
+            "$value$suffix"
+        }
+        return MLActivity.LayoutLine(
+            text =  merged.joinToString(SEPARATE_ITEM_PART),
+            midY = lineVATUnit.midY,
+            minX = lineVATUnit.minX,
+            maxX = lineVATUnit.maxX
+        )
+
+    }
+
     fun convert2InvoiceData(itemInvoices: List<MLActivity.LayoutLine>,
                             ocrTexts: List<MLActivity.LayoutLine>
     ):InvoiceData{
 
-        val lineVat = ocrTexts.find { getVatFromLine(it.text) !=null }
+        // logic handle VAT not the same line
+        // check if exist "%" then go to the next line to get VAT
+        val index = ocrTexts.indexOfFirst { getVatFromLine(it.text) != null }
+        var lineVat = ocrTexts.getOrNull(index)
+        val cleanVat = getVatFromLine(lineVat?.text)
+        if (lineVat !=null && cleanVat.equals("%")) {
+            lineVat = mergeVATLine(lineVat,ocrTexts[index + 1])
+        }
+        val total = ocrTexts.find { isTotalLine(it.text) }
         return InvoiceData(
             items = convert2InvoiceItem(itemInvoices),
-            vat = getVatFromLine(lineVat?.text)
+            vat = getVatFromLine(lineVat?.text),
+            total = cleanTotalText(total?.text)
         )
 
     }
 
     // VAT
     private fun getVatFromLine(line: String?): String? {
-        //  if(text.any { it == })
-        // val parts = line.split(Regex("""\s+\|\s+""")).map { it.trim() }
 
-        if(line?.contains("19 % USt. auf € 1.875,00 ") ==true){
+        if(line?.contains("%") ==true){
             Log.e("Suong",line)
         }
         val parts = line?.split(Regex(SEPARATE_ITEM_PART))?.map { it.trim() }
@@ -342,20 +393,18 @@ object InvoiceItemUtil {
     private fun containsVatPercentage(text: String): Boolean {
         val trimmed = text.trim()
 
-        // Trường hợp chỉ có dấu %
         if (trimmed == "%") return true
-
-        // Regex kiểm tra số (nguyên hoặc thập phân với , hoặc .) đứng ngay trước dấu %
-        //val regex = Regex("""\b\d{1,3}([.,]\d+)?%""")
         val regex = Regex("""\b\d{1,3}([.,]\d+)?\s*%""")
-
-
         return regex.containsMatchIn(trimmed)
     }
 
     //A:19,00% => 19,00%
     private fun cleanVatText(input: String): String {
 
+        val trimmed = input.trim()
+        if (trimmed == "%") {
+            return "%"
+        }
         val startFromDigit = input.dropWhile { !it.isDigit() }
         val cleaned = startFromDigit.replace(Regex("""[^0-9,%.]"""), "")
         val percentIndex = cleaned.indexOf('%')
@@ -364,9 +413,60 @@ object InvoiceItemUtil {
         } else {
             cleaned
         }
-
-
     }
+
+    /***
+     * Process get total
+     */
+
+    //"GesamtsUmMe:   |  14,40" => true
+    private fun isTotalLine(line: String): Boolean {
+
+        if(line.contains("GesamtsUmMe")){
+            Log.e("Suong",line)
+        }
+        val totalKeywords = listOf(
+            "gesamtsumme",
+            "summe",
+            "gesamtbetrag",
+            "zu zahlen",
+            "endbetrag",
+            "rechnungsbetrag",
+            "bruttobetrag",
+            "zahlbetrag"
+        )
+
+        val normalizedLine = line.lowercase()
+
+        return totalKeywords.any { keyword ->
+            normalizedLine.contains(keyword)
+        }
+    }
+
+    private fun getTotalFromLine(line: String?): String? {
+
+        val parts = line?.split(Regex(SEPARATE_ITEM_PART))?.map { it.trim() }
+        val vat = parts?.find { isTotalLine(it) }
+        if(vat !=null) {
+            return cleanTotalText( vat)
+        }
+        return null
+    }
+
+    //"GesamtsUmMe:   |  14,40" => 14,40
+    private fun cleanTotalText(input: String?): String? {
+        var cleaned = input?.replace("\\s+".toRegex(), "")
+        cleaned = cleaned?.replace("[a-zA-Z]\\d+|\\d+[a-zA-Z]".toRegex(), "")
+        cleaned = cleaned?.replace("[a-zA-Z]".toRegex(), "")
+        cleaned = cleaned?.replace("[^0-9,\\.]".toRegex(), "")
+        return cleaned
+    }
+
+
+
+
+
+
 
 
 }

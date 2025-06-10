@@ -1,0 +1,152 @@
+[
+  {
+    "maxX": 844.0,
+    "midY": 353.5,
+    "minX": 560.0,
+    "text": "Esso"
+  },
+  {
+    "maxX": 415.0,
+    "midY": 604.5,
+    "minX": 66.0,
+    "text": "Esso Station"
+  },
+  {
+    "maxX": 652.0,
+    "midY": 671.5,
+    "minX": 63.0,
+    "text": "ROC Deutschland GmbH"
+  },
+  {
+    "maxX": 563.0,
+    "midY": 746.0,
+    "minX": 61.0,
+    "text": "Sievekingsallee 4"
+  },
+  {
+    "maxX": 444.0,
+    "midY": 815.0,
+    "minX": 61.0,
+    "text": "20535 Hamburg"
+  },
+  {
+    "maxX": 534.0,
+    "midY": 886.5,
+    "minX": 73.0,
+    "text": "Tel.: 040-258425"
+  },
+  {
+    "maxX": 1224.0,
+    "midY": 1178.1666,
+    "minX": 52.0,
+    "text": "Datum   |  Uhrzeit   |  Belegnummer"
+  },
+  {
+    "maxX": 1313.0,
+    "midY": 1248.6666,
+    "minX": 53.0,
+    "text": "09.06.2025   |  17:06   |  4121/00001/017"
+  },
+  {
+    "maxX": 290.0,
+    "midY": 1396.0,
+    "minX": 51.0,
+    "text": "Rechnung"
+  },
+  {
+    "maxX": 1320.0,
+    "midY": 1471.75,
+    "minX": 53.0,
+    "text": "*000013 Super E10   |  43,04 EUR A #*"
+  },
+  {
+    "maxX": 1319.0,
+    "midY": 1542.6666,
+    "minX": 52.0,
+    "text": "*Zp 07 26,26 1   |  1,639 EUR/1   |  #*"
+  },
+  {
+    "maxX": 1284.0,
+    "midY": 1610.0,
+    "minX": 82.0,
+    "text": "528942 Twix King Síze   |  2,19 EUR B +"
+  },
+  {
+    "maxX": 1285.0,
+    "midY": 1687.0,
+    "minX": 82.0,
+    "text": "528942 Twix King Size   |  2,19 EUR B +"
+  },
+  {
+    "maxX": 775.0,
+    "midY": 1832.0,
+    "minX": 508.0,
+    "text": "Promot ion"
+  },
+  {
+    "maxX": 1167.0,
+    "midY": 1903.5,
+    "minX": 83.0,
+    "text": "001336 2Rg Mars/Snick/Twi -1,88 EUR"
+  },
+  {
+    "maxX": 1260.0,
+    "midY": 1979.0,
+    "minX": 52.0,
+    "text": "Auf Grund der genutzten Promotions haben"
+  },
+  {
+    "maxX": 676.0,
+    "midY": 2047.5,
+    "minX": 51.0,
+    "text": "Sie 1,88 EUR gespart."
+  },
+  {
+    "maxX": 1165.0,
+    "midY": 2228.0,
+    "minX": 289.0,
+    "text": "Gesantbetrag   |  6,54 ELR"
+  },
+  {
+    "maxX": 827.0,
+    "midY": 2536.75,
+    "minX": 59.0,
+    "text": "St.-Nr.Stat ion:   |  0 (+)"
+  },
+  {
+    "maxX": 1166.0,
+    "midY": 2615.0,
+    "minX": 43.0,
+    "text": "Echo TankstellenGmbH 27/160/01175 (#)"
+  },
+  {
+    "maxX": 1324.0,
+    "midY": 2836.625,
+    "minX": 39.0,
+    "text": "Typ   |  Netto   |  Mwst   |  Brutto"
+  },
+  {
+    "maxX": 1324.0,
+    "midY": 2912.125,
+    "minX": 39.0,
+    "text": "A:19,00%   |  36,17   |  6,87   |  43,04"
+  },
+  {
+    "maxX": 1320.0,
+    "midY": 2985.875,
+    "minX": 38.0,
+    "text": "B: 7,00%   |  2,34   |  0,16   |  2.50"
+  },
+  {
+    "maxX": 1323.0,
+    "midY": 3057.75,
+    "minX": 40.0,
+    "text": "Summe   |  38,51   |  7,03   |  45.54"
+  },
+  {
+    "maxX": 987.0,
+    "midY": 3353.5,
+    "minX": 348.0,
+    "text": "* * Kundenbeleg * *"
+  }
+]

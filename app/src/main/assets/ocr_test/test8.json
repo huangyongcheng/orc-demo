@@ -1,0 +1,306 @@
+[
+  {
+    "maxX": 849.0,
+    "midY": 134.0,
+    "minX": 133.0,
+    "text": "Aral Tankstelle"
+  },
+  {
+    "maxX": 445.0,
+    "midY": 219.0,
+    "minX": 240.0,
+    "text": "Taha Aydin"
+  },
+  {
+    "maxX": 640.0,
+    "midY": 278.5,
+    "minX": 240.0,
+    "text": "Essener Strasse 225"
+  },
+  {
+    "maxX": 660.0,
+    "midY": 331.5,
+    "minX": 237.0,
+    "text": "45472 MUlhe im / Ruhr"
+  },
+  {
+    "maxX": 617.0,
+    "midY": 393.0,
+    "minX": 50.0,
+    "text": "Tankstel len-Nr.: 0140956186"
+  },
+  {
+    "maxX": 619.0,
+    "midY": 443.0,
+    "minX": 291.0,
+    "text": "Tel.: 0208431410"
+  },
+  {
+    "maxX": 623.0,
+    "midY": 499.0,
+    "minX": 277.0,
+    "text": "Fax.: 0208430019"
+  },
+  {
+    "maxX": 922.0,
+    "midY": 614.5,
+    "minX": 39.0,
+    "text": "Beleg-Nr, 5660/014/00002 09.06.2025 13:46"
+  },
+  {
+    "maxX": 942.0,
+    "midY": 702.0,
+    "minX": 686.0,
+    "text": "65,54 EUR-A*"
+  },
+  {
+    "maxX": 807.0,
+    "midY": 780.375,
+    "minX": 42.0,
+    "text": "*000019 Super E10   |  *Zp 01   |  40,99 1   |  1,599 EUR/1"
+  },
+  {
+    "maxX": 470.0,
+    "midY": 932.0,
+    "minX": 216.0,
+    "text": "Bzsantbtetrag"
+  },
+  {
+    "maxX": 881.0,
+    "midY": 1023.0,
+    "minX": 686.0,
+    "text": "65,54 EUR"
+  },
+  {
+    "maxX": 719.0,
+    "midY": 1122.0,
+    "minX": 45.0,
+    "text": "A:19,00% 55,08   |  Typ   |  Visa   |  Netto   |  10,46   |  Must   |  Brutto   |  65,54"
+  },
+  {
+    "maxX": 277.0,
+    "midY": 1301.0,
+    "minX": 43.0,
+    "text": "KUNDENBELEG"
+  },
+  {
+    "maxX": 321.0,
+    "midY": 1355.5,
+    "minX": 44.0,
+    "text": "Kartenzahlung"
+  },
+  {
+    "maxX": 817.0,
+    "midY": 1413.5,
+    "minX": 44.0,
+    "text": "AUTORISIERUNG ERFOLGT   |  2845"
+  },
+  {
+    "maxX": 815.0,
+    "midY": 1506.625,
+    "minX": 45.0,
+    "text": "Quittungsnummer   |  Datum/Uhrzeit   |  09.06.2025 13:45: 15   |  Visa Debit"
+  },
+  {
+    "maxX": 818.0,
+    "midY": 1591.25,
+    "minX": 45.0,
+    "text": "Anwendungsname   |  A000000003 1010"
+  },
+  {
+    "maxX": 813.0,
+    "midY": 1654.25,
+    "minX": 48.0,
+    "text": "AID   |  XXXXXXXXXXXX1183-01"
+  },
+  {
+    "maxX": 818.0,
+    "midY": 1705.0,
+    "minX": 48.0,
+    "text": "Karte   |  134523"
+  },
+  {
+    "maxX": 817.0,
+    "midY": 1756.5,
+    "minX": 46.0,
+    "text": "Autorisierungsmerkmal   |  00040032/00"
+  },
+  {
+    "maxX": 815.0,
+    "midY": 1815.25,
+    "minX": 47.0,
+    "text": "Act-code   |  71114817"
+  },
+  {
+    "maxX": 819.0,
+    "midY": 1871.75,
+    "minX": 49.0,
+    "text": "Terminal-ID   |  4556718123"
+  },
+  {
+    "maxX": 820.0,
+    "midY": 1930.25,
+    "minX": 49.0,
+    "text": "VU-Nummer   |  756193/1685"
+  },
+  {
+    "maxX": 821.0,
+    "midY": 1982.75,
+    "minX": 48.0,
+    "text": "STAN/BATCH   |  PIN"
+  },
+  {
+    "maxX": 821.0,
+    "midY": 2045.25,
+    "minX": 50.0,
+    "text": "CVM   |  EUR 65.54"
+  },
+  {
+    "maxX": 174.0,
+    "midY": 2099.0,
+    "minX": 48.0,
+    "text": "Betrag"
+  },
+  {
+    "maxX": 217.0,
+    "midY": 2209.0,
+    "minX": 48.0,
+    "text": "APPROVED"
+  },
+  {
+    "maxX": 367.0,
+    "midY": 2258.5,
+    "minX": 50.0,
+    "text": "Visa Kontakt los"
+  },
+  {
+    "maxX": 623.0,
+    "midY": 2363.5,
+    "minX": 49.0,
+    "text": "Legende der Steuernummer(n)"
+  },
+  {
+    "maxX": 953.0,
+    "midY": 2441.5,
+    "minX": 651.0,
+    "text": "27/151/00447-1"
+  },
+  {
+    "maxX": 241.0,
+    "midY": 2491.0,
+    "minX": 91.0,
+    "text": "ARAL AG"
+  },
+  {
+    "maxX": 606.0,
+    "midY": 2594.5,
+    "minX": 47.0,
+    "text": "Das o. g. Datum entspricht"
+  },
+  {
+    "maxX": 776.0,
+    "midY": 2644.5,
+    "minX": 48.0,
+    "text": "dem Rechnungs- und Leistungsdatum."
+  },
+  {
+    "maxX": 732.0,
+    "midY": 2875.0,
+    "minX": 48.0,
+    "text": "Kein Umtausch von Zeitschriften,"
+  },
+  {
+    "maxX": 583.0,
+    "midY": 2937.5,
+    "minX": 53.0,
+    "text": "Tabakwaren, Telefonkarten,"
+  },
+  {
+    "maxX": 417.0,
+    "midY": 3000.0,
+    "minX": 50.0,
+    "text": "Schmierstoffe und"
+  },
+  {
+    "maxX": 345.0,
+    "midY": 3060.0,
+    "minX": 49.0,
+    "text": "Gutscheine !!!"
+  },
+  {
+    "maxX": 938.0,
+    "midY": 3154.1,
+    "minX": 49.0,
+    "text": "Der Verkauf   |  Von   |  Kraft-   |  und   |  Schmierstoffen"
+  },
+  {
+    "maxX": 478.0,
+    "midY": 3228.5,
+    "minX": 50.0,
+    "text": "erfolgt im Namen der"
+  },
+  {
+    "maxX": 830.0,
+    "midY": 3269.5,
+    "minX": 49.0,
+    "text": "Aral Aktiengesel lschaft DE118616994."
+  },
+  {
+    "maxX": 911.0,
+    "midY": 3323.5,
+    "minX": 52.0,
+    "text": "Im Verkaufspreis für Kraftstoffe ist der"
+  },
+  {
+    "maxX": 884.0,
+    "midY": 3383.0,
+    "minX": 50.0,
+    "text": "gesetzl. Bevorratungsbeitrag enthalten."
+  },
+  {
+    "maxX": 650.0,
+    "midY": 3502.5,
+    "minX": 53.0,
+    "text": "POS:0140956 186-2 TSE-Beleg-Nr: 584412"
+  },
+  {
+    "maxX": 960.0,
+    "midY": 3548.5,
+    "minX": 51.0,
+    "text": "SerienNr TSE: 898FD4ACC5041D30104273EFBFEF 159A744F812739"
+  },
+  {
+    "maxX": 411.0,
+    "midY": 3633.5,
+    "minX": 52.0,
+    "text": "38E38F3EEA259C4FD87FD5"
+  },
+  {
+    "maxX": 420.0,
+    "midY": 3691.0,
+    "minX": 53.0,
+    "text": "Signaturzah ler: 1365352"
+  },
+  {
+    "maxX": 621.0,
+    "midY": 3736.0,
+    "minX": 53.0,
+    "text": "Startzeitpunkt: 09,06.2025 13:46:46"
+  },
+  {
+    "maxX": 720.0,
+    "midY": 3789.0,
+    "minX": 53.0,
+    "text": "beendigungszei tpunkt: 09.06. 2025 13:46:59"
+  },
+  {
+    "maxX": 968.0,
+    "midY": 3833.0,
+    "minX": 53.0,
+    "text": "Prufuert: CPiQMUS2Uxiuf 4LKICa6kOWa i2/hXwZcguMinSlx@aj P2P"
+  },
+  {
+    "maxX": 964.0,
+    "midY": 3889.0,
+    "minX": 54.0,
+    "text": "cJesveNK ixWallkLzy0TUsnt "} ]
