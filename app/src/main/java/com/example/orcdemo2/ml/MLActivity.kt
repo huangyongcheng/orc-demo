@@ -145,8 +145,14 @@ class MLActivity : Activity() {
                         val previousLayoutLine = listORC[index - 1]
                         val previousParts = previousLayoutLine.text.split(Regex("""\s+\|\s+""")).map { it.trim() }
 
+
+                        if(previousLayoutLine.text.contains("Mehr unter")){
+                            Log.e("Suong123", previousLayoutLine.text)
+                        }
                         // If the previous line has only one part and the current line is visually more right-aligned
-                        val shouldCombine = previousParts.size == 1 && layoutLine.minX > previousLayoutLine.minX
+                        val shouldCombine = previousParts.size == 1 &&
+                                layoutLine.minX > previousLayoutLine.minX &&
+                                !InvoiceItemUtil.containsWebsite(previousLayoutLine.text)
 
                         if (shouldCombine) {
                             // Combine the previous and current layout lines into one invoice item
@@ -245,6 +251,7 @@ class MLActivity : Activity() {
             fos.close()
 
         } catch (e: Exception) {
+            Log.e("Suong","exception: "+ e.message)
             e.printStackTrace()
         }
     }
