@@ -124,7 +124,7 @@ object InvoiceItemUtil {
     fun isInvoiceItem(text: String): Boolean {
 
         if (text.contains(SEPARATE_ITEM_PART)) {
-            if(text.contains("INNEN T0TAL"))
+            if(text.contains("Trinkgeld gegeben:"))
             {
                 Log.e("Suong123",text)
             }
@@ -135,7 +135,7 @@ object InvoiceItemUtil {
                 "kartenzahlung", "total","t0tal", "wechselgeld", "bezahlt", "change", "gesamt", "mwst", "datum",
                 "visa", "beleg-nr.", "beleg nummer", "belegnummer", "genehmigung",
                 "terminalnummer", "zurück", "tax:", "lieferung", "ust.", "umsatzsteuer","urnsatzstever", "urmsatzstever",
-                "credit","incl,","incl.","brutto",
+                "credit","incl,","incl.","brutto","netto","card",
                 "=",
               //  "%" // remove if need check VAT
             )
@@ -289,9 +289,9 @@ object InvoiceItemUtil {
 
     // Check quantity
     // "2 Stück" =>true, "Stück 2" =>true
-    private fun extractQuantityByKeyword(text: String): String?{
+    private fun extractQuantityByKeyword(text: String): Pair<String?, String?>? {
 
-        val unitKeywords = listOf("stück", "kg", "flasche", "packung", "einheit", "dose", "päckchen", "posten:","km")
+        val unitKeywords = listOf("stück", "kg", "flasche", "packung", "einheit", "dose", "päckchen", "posten:")
         val unitPattern = unitKeywords.joinToString("|")
 
         val quantityRegex = Regex(
@@ -306,34 +306,37 @@ object InvoiceItemUtil {
         } else {
              null
         }
-        return result ?: extractQuantityByX(text)
+        if(result == null){
+            return extractQuantityByX(text)
+        } else{
+            return  Pair(result, null)
+        }
+
     }
 
     //2X Cola 0,4 => 2
     //2 X Cola 0,4 => 2
-    private fun extractQuantityByX(text: String):String? {
-        val quantityRegex = Regex("""\b(\d+)[xX]\b""")
-        val match = quantityRegex.find(text)
-        return match?.groupValues?.get(1)?.takeIf { it.isNotBlank() }
+    private fun extractQuantityByX(text: String):Pair<String, String>?  {
 
-        /*
         val trimmed = text.trim()
 
-        // TH1: Số đứng trước X hoặc x — được phép có khoảng trắng giữa
-        val prefixRegex = Regex("""(?:^|\s)(\d+)\s*[xX](?=\s|$)""")
+        val regexPrefix = Regex("""(?:^|\s)(\d+)\s*[xX]\s+(.+)""")
+        val matchPrefix = regexPrefix.find(trimmed)
+        if (matchPrefix != null) {
+            val quantity = matchPrefix.groupValues[1]
+            val item = matchPrefix.groupValues[2].trim()
+            return Pair(quantity, item)
+        }
 
-        // TH2: X hoặc x đứng trước số — phải có khoảng trắng giữa
-        val suffixRegex = Regex("""(?:^|\s)[xX]\s*(\d+)(?=\s|$)""")
-
-        val match1 = prefixRegex.find(trimmed)
-        if (match1 != null) return match1.groupValues[1]
-
-        val match2 = suffixRegex.find(trimmed)
-        if (match2 != null) return match2.groupValues[1]
+        val regexSuffix = Regex("""(.+?)\s+[xX]\s*(\d+)(?:\s|$)""")
+        val matchSuffix = regexSuffix.find(trimmed)
+        if (matchSuffix != null) {
+            val item = matchSuffix.groupValues[1].trim()
+            val quantity = matchSuffix.groupValues[2]
+            return Pair(quantity, item)
+        }
 
         return null
-
-         */
 
     }
 
@@ -346,7 +349,7 @@ object InvoiceItemUtil {
 
     fun convertToInvoiceItem(line: String): InvoiceItem {
 
-        if (line.contains("Kalb.Schnitzel-Salat")) {
+        if (line.contains("son parking tie")) {
             Log.e("Suong", line)
         }
 
@@ -376,7 +379,10 @@ object InvoiceItemUtil {
         parts.forEachIndexed { index, item ->
             val extractQuantity = extractQuantityByKeyword(item) // check part have quantity
             if (extractQuantity !=null) {
-                quantity = extractQuantity
+                quantity = extractQuantity.first
+                if(extractQuantity.second !=null) {
+                    name = extractQuantity.second
+                }
             } else {
                 if (index <= indexPrice) {
                     if (!isValidNumber(item) && isProductNameValid(item)) { // only add with letter, ignore number
@@ -498,6 +504,7 @@ object InvoiceItemUtil {
 
     //A:19,00% => 19,00%
     // "5,09 (20%)" => 20%
+    //1=19,00% => 19,00%
     private fun cleanVatText(input: String): String {
 
         val trimmed = input.trim()
@@ -511,7 +518,20 @@ object InvoiceItemUtil {
             return match.groupValues[1] + "%"
         }
 
-        val startFromDigit = input.dropWhile { !it.isDigit() }
+
+        var target = input
+
+        if (input.contains('=') && input.contains('%')) {
+            val percentIndex = input.indexOf('%')
+            val equalIndex = input.indexOf('=')
+            target = if (percentIndex > equalIndex) {
+                input.substring(equalIndex + 1)
+            } else {
+                input.substring(0, equalIndex)
+            }
+        }
+
+        val startFromDigit = target.dropWhile { !it.isDigit() }
         val cleaned = startFromDigit.replace(Regex("""[^0-9,%.]"""), "")
         val percentIndex = cleaned.indexOf('%')
         return if (percentIndex != -1) {
