@@ -68,7 +68,15 @@ object InvoiceItemUtil {
     private fun containsInValidNumbers(text: String): Boolean {
         // Find all number groups separated by spaces
         val tokens = text.trim().split(Regex("\\s+"))
-        val numberTokens = tokens.filter { it.matches(Regex("\\d+")) }
+
+        val firstToken = tokens.first()
+        val tailTokens = if (firstToken.matches(Regex("^\\d+$"))) {
+            tokens.drop(1)
+        } else {
+            tokens
+        }
+
+        val numberTokens = tailTokens.filter { it.matches(Regex("\\d+")) }
 
         // 0,94 14,40 return true (invalid)
         val decimalRegex = Regex("""\d+[,.]\d+""")
@@ -94,7 +102,7 @@ object InvoiceItemUtil {
     fun isInvoiceItem(text: String): Boolean {
 
         if (text.contains(SEPARATE_ITEM_PART)) {
-            if(text.contains("A 7%"))
+            if(text.contains("We Charge"))
             {
                 Log.e("Suong",text)
             }
@@ -105,6 +113,7 @@ object InvoiceItemUtil {
                 "kartenzahlung", "total", "wechselgeld", "bezahlt", "change", "gesamt", "mwst", "datum",
                 "visa", "beleg-nr.", "beleg nummer", "belegnummer", "genehmigung",
                 "terminalnummer", "zurück", "tax:", "lieferung", "ust.", "umsatzsteuer",
+                "credit",
                 "=",
                 "%" // remove if need check VAT
             )
@@ -113,7 +122,7 @@ object InvoiceItemUtil {
 
             // Rule 2 If the line contains this list of keywords, it is not an invoice item
             // Tax: => false
-            val equalKeyWord = listOf("tax:", "tax", "cash", "cash tendered:", "net")
+            val equalKeyWord = listOf("tax:", "tax", "cash", "cash tendered:", "net","netto")
             val parts = text.split(Regex(SEPARATE_ITEM_PART)).map { it.trim() }
             val hasEqualKeyWord = parts.any { part -> equalKeyWord.any { it.equals(part.trim(), true) } }
             if (hasEqualKeyWord) {
@@ -163,6 +172,18 @@ object InvoiceItemUtil {
             return regex.matches(text.trim())
         }
         return false
+    }
+
+    //EUR 65.54 = false
+    private fun isProductNameValid(name: String?): Boolean {
+        if (name.isNullOrBlank() || name.length < 4) return false
+
+        val currencyKeywords = listOf("EUR")
+
+        return currencyKeywords.none { keyword ->
+            Regex("""\b${Regex.escape(keyword)}\b""").containsMatchIn(name)
+        }
+
     }
 
     private fun extractNumberOnly(text: String?): String? {
@@ -262,7 +283,7 @@ object InvoiceItemUtil {
         val parts = line.split(Regex("""\s+\|\s+""")).map { it.trim() }
         if (parts.size < 2) return InvoiceItem()
 
-        if (line.contains("Posten")) {
+        if (line.contains("CVM   |  EUR 65.54")) {
             Log.e("Suong", line)
         }
 
@@ -287,7 +308,7 @@ object InvoiceItemUtil {
                 quantity = extractQuantity.second
             } else {
                 if (index <= indexPrice) {
-                    if (!isValidNumber(item)) { // only add with letter, ignore number
+                    if (!isValidNumber(item) && isProductNameValid(item)) { // only add with letter, ignore number
                         name = "$name $item"
                         indexLastName = index
                     }
@@ -333,7 +354,10 @@ object InvoiceItemUtil {
     private fun convert2InvoiceItem(itemInvoices: List<MLActivity.LayoutLine>): List<InvoiceItem> {
         val listItems = mutableListOf<InvoiceItem>()
         itemInvoices.forEach {
-            listItems.add(convertToInvoiceItem(it.text))
+            val itemInvoice = convertToInvoiceItem(it.text)
+            if(!TextUtils.isEmpty(itemInvoice.name)) {
+                listItems.add(itemInvoice)
+            }
         }
         return listItems
     }
@@ -433,7 +457,8 @@ object InvoiceItemUtil {
             "endbetrag",
             "rechnungsbetrag",
             "bruttobetrag",
-            "zahlbetrag"
+            "zahlbetrag",
+            "total"
         )
 
         val normalizedLine = line.lowercase()
