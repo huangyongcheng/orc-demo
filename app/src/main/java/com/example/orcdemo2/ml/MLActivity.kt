@@ -8,17 +8,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.example.orcdemo2.R
-import com.example.orcdemo2.ml.InvoiceItemUtil.SEPARATE_ITEM_PART
-import com.example.orcdemo2.ml.InvoiceItemUtil.convertToInvoiceItem
-import com.example.orcdemo2.ml.InvoiceItemUtil.isInvoiceItem
 import com.example.orcdemo2.ml.demo.LayoutExtractor
 import com.example.orcdemo2.ml.demo.LayoutSectionType
 import com.example.orcdemo2.ml.demo.SectionClassifier
+import com.example.orcdemo2.ml.refactor.Constants.SEPARATE_ITEM_PART
+import com.example.orcdemo2.ml.refactor.InvoiceConverter.convert2InvoiceData
+import com.example.orcdemo2.ml.refactor.InvoiceItemProcessor.containsWebsite
+import com.example.orcdemo2.ml.refactor.InvoiceItemProcessor.isInvoiceItem
+import com.example.orcdemo2.ml.refactor.model.LayoutLine
 import com.example.orcdemo2.ml.tflite2.ImageClassifier
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -115,13 +115,6 @@ class MLActivity : Activity() {
 
     }
 
-    private fun convert2InvoiceItem(itemInvoices: List<LayoutLine>) : MutableList<InvoiceItemUtil.InvoiceItem>{
-        val listItems = mutableListOf<InvoiceItemUtil.InvoiceItem>()
-        itemInvoices.forEach {
-            listItems.add(convertToInvoiceItem(it.text))
-        }
-        return listItems
-    }
 
     private fun testInvoiceOrc() {
         filesDir.delete()
@@ -152,7 +145,7 @@ class MLActivity : Activity() {
                         // If the previous line has only one part and the current line is visually more right-aligned
                         val shouldCombine = previousParts.size == 1 &&
                                 layoutLine.minX > previousLayoutLine.minX &&
-                                !InvoiceItemUtil.containsWebsite(previousLayoutLine.text)
+                                !containsWebsite(previousLayoutLine.text)
 
                         if (shouldCombine) {
                             // Combine the previous and current layout lines into one invoice item
@@ -178,7 +171,7 @@ class MLActivity : Activity() {
             writeToFile(this@MLActivity, "result_${it}",
                 Gson().toJson(invoiceItems))
             writeToFile(this@MLActivity, "result_${it}_item",
-                Gson().toJson(InvoiceItemUtil.convert2InvoiceData(invoiceItems, listORC)))
+                Gson().toJson(convert2InvoiceData(invoiceItems, listORC)))
 
         }
         mergeJsonFiles(this@MLActivity)
@@ -190,12 +183,7 @@ class MLActivity : Activity() {
     )
 
 
-    data class LayoutLine(
-        val text: String,
-        val midY: Float,
-        val minX: Float,
-        val maxX: Float
-    )
+
 
     fun writeToFile(context: Context, fileName: String?, jsonRaw: String) {
         try {
@@ -251,7 +239,7 @@ class MLActivity : Activity() {
             fos.close()
 
         } catch (e: Exception) {
-            Log.e("Suong","exception: "+ e.message)
+            Log.e("Suong123","exception: "+ e.message)
             e.printStackTrace()
         }
     }

@@ -2,6 +2,9 @@ package com.example.orcdemo2.ml
 
 import android.text.TextUtils
 import android.util.Log
+import com.example.orcdemo2.ml.refactor.model.InvoiceData
+import com.example.orcdemo2.ml.refactor.model.InvoiceItem
+import com.example.orcdemo2.ml.refactor.model.LayoutLine
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -415,20 +418,9 @@ object InvoiceItemUtil {
         )
     }
 
-    data class InvoiceItem(
-        val name: String? = null,
-        val quantity: String? = null,
-        val totalPrice: String? = null,
-    )
-
-    data class InvoiceData(
-        val vat: String? = null,
-        val total: String? = null,
-        val items: List<InvoiceItem>? = null
-    )
 
 
-    private fun convert2InvoiceItem(itemInvoices: List<MLActivity.LayoutLine>): List<InvoiceItem> {
+    private fun convert2InvoiceItem(itemInvoices: List<LayoutLine>): List<InvoiceItem> {
         val listItems = mutableListOf<InvoiceItem>()
         itemInvoices.forEach {
             val itemInvoice = convertToInvoiceItem(it.text)
@@ -439,7 +431,7 @@ object InvoiceItemUtil {
         return listItems
     }
 
-    private fun mergeVATLine(lineVATUnit: MLActivity.LayoutLine, lineVATValue: MLActivity.LayoutLine):MLActivity.LayoutLine{
+    private fun mergeVATLine(lineVATUnit: LayoutLine, lineVATValue: LayoutLine): LayoutLine {
         val headerParts = lineVATUnit.text.split(SEPARATE_ITEM_PART).map { it.trim() }
         val valueParts = lineVATValue.text.split(SEPARATE_ITEM_PART).map { it.trim() }
 
@@ -447,7 +439,7 @@ object InvoiceItemUtil {
             val suffix = headerParts.getOrNull(index)?.takeIf { it.isNotEmpty() } ?: ""
             "$value$suffix"
         }
-        return MLActivity.LayoutLine(
+        return LayoutLine(
             text =  merged.joinToString(SEPARATE_ITEM_PART),
             midY = lineVATUnit.midY,
             minX = lineVATUnit.minX,
@@ -456,9 +448,9 @@ object InvoiceItemUtil {
 
     }
 
-    fun convert2InvoiceData(itemInvoices: List<MLActivity.LayoutLine>,
-                            ocrTexts: List<MLActivity.LayoutLine>
-    ):InvoiceData{
+    fun convert2InvoiceData(itemInvoices: List<LayoutLine>,
+                            ocrTexts: List<LayoutLine>
+    ): InvoiceData {
 
 
         // logic handle VAT not the same line
