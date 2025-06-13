@@ -12,7 +12,7 @@ object TotalExtractor {
         val totalKeywords = listOf(
             "gesamtsumme", "summe", "sunne eur", "gesamtbetrag", "zu zahlen",
             "endbetrag", "rechnungsbetrag", "bruttobetrag", "zahlbetrag",
-            "total", "übertrag", "t0tal"
+            "total", "übertrag", "t0tal","betrag"
         )
         val normalizedLine = line.lowercase()
         return totalKeywords.any { keyword ->
@@ -29,10 +29,16 @@ object TotalExtractor {
         return null
     }
 
+    // "GesamtsUmMe:   |  14,40" => 14,40
+    // "Gesamtbetrag   |  25,48   |  5,09 (20%)   |  30,57" => 30,57
     fun cleanTotalText(input: String?): String? {
+        if(input?.contains("24,00 EUR") == true) {
+            Log.e("Suong", input.toString())
+        }
         if (input == null) return null
         val lastPart = input.split(SEPARATE_ITEM_PART).last().trim()
-        var cleaned = lastPart.replace("\\s+".toRegex(), "")
+        // remove space between numbers
+        var cleaned = lastPart.replace(Regex("(?<=\\d)[ \\t]+(?=\\d)"), "")
         cleaned = cleaned.replace("[a-zA-Z]\\d+|\\d+[a-zA-Z]".toRegex(), "")
         cleaned = cleaned.replace("[a-zA-Z]".toRegex(), "")
         cleaned = cleaned.replace("[^0-9,\\.]".toRegex(), "")
