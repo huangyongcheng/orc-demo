@@ -121,60 +121,67 @@ class MLActivity : Activity() {
         val allFiles = assets.list("ocr_test")
         allFiles?.filter { it.startsWith("test") }?.forEach {
 
-
-            val listORC = readProductsFromAssets(this@MLActivity, "ocr_test/$it")
-
-            val invoiceItems = mutableListOf<LayoutLine>()
-
-            listORC.forEachIndexed { index, layoutLine ->
-
-                // Debug: check specific line
-                if (layoutLine.text.contains("6,00 Stück x")) {
-                    Log.e("Suong", "layoutLine: ${layoutLine}")
-                }
-
-                if (isInvoiceItem(layoutLine.text)) {
-                    if (index > 0) {
-                        val previousLayoutLine = listORC[index - 1]
-                        val previousParts = previousLayoutLine.text.split(Regex("""\s+\|\s+""")).map { it.trim() }
+          //  if (it.equals("test18.json")) {
 
 
-                        if(previousLayoutLine.text.contains("Mehr unter")){
-                            Log.e("Suong123", previousLayoutLine.text)
-                        }
-                        // If the previous line has only one part and the current line is visually more right-aligned
-                        val shouldCombine = previousParts.size == 1 &&
-                                layoutLine.minX > previousLayoutLine.minX &&
-                                !containsWebsite(previousLayoutLine.text)
+                val listORC = readProductsFromAssets(this@MLActivity, "ocr_test/$it")
 
-                        if (shouldCombine) {
-                            // Combine the previous and current layout lines into one invoice item
-                            val combinedText = "${previousLayoutLine.text}$SEPARATE_ITEM_PART${layoutLine.text}"
-                            val combinedLayoutLine = LayoutLine(
-                                text = combinedText,
-                                midY = previousLayoutLine.midY,
-                                minX = previousLayoutLine.minX,
-                                maxX = previousLayoutLine.maxX
-                            )
-                            invoiceItems.add(combinedLayoutLine)
+                val invoiceItems = mutableListOf<LayoutLine>()
+
+                listORC.forEachIndexed { index, layoutLine ->
+
+                    // Debug: check specific line
+                    if (layoutLine.text.contains("6,00 Stück x")) {
+                        Log.e("Suong", "layoutLine: ${layoutLine}")
+                    }
+
+                    if (isInvoiceItem(layoutLine.text)) {
+                        if (index > 0) {
+                            val previousLayoutLine = listORC[index - 1]
+                            val previousParts = previousLayoutLine.text.split(Regex("""\s+\|\s+""")).map { it.trim() }
+
+
+                            if (previousLayoutLine.text.contains("Mehr unter")) {
+                                Log.e("Suong123", previousLayoutLine.text)
+                            }
+                            // If the previous line has only one part and the current line is visually more right-aligned
+                            val shouldCombine = previousParts.size == 1 &&
+                                    layoutLine.minX > previousLayoutLine.minX &&
+                                    !containsWebsite(previousLayoutLine.text)
+
+                            if (shouldCombine) {
+                                // Combine the previous and current layout lines into one invoice item
+                                val combinedText = "${previousLayoutLine.text}$SEPARATE_ITEM_PART${layoutLine.text}"
+                                val combinedLayoutLine = LayoutLine(
+                                    text = combinedText,
+                                    midY = previousLayoutLine.midY,
+                                    minX = previousLayoutLine.minX,
+                                    maxX = previousLayoutLine.maxX
+                                )
+                                invoiceItems.add(combinedLayoutLine)
+                            } else {
+                                // Add current layout line directly if no need to combine
+                                invoiceItems.add(layoutLine)
+                            }
+
                         } else {
-                            // Add current layout line directly if no need to combine
+                            // First item, no previous line to compare
                             invoiceItems.add(layoutLine)
                         }
-
-                    } else {
-                        // First item, no previous line to compare
-                        invoiceItems.add(layoutLine)
                     }
                 }
-            }
-            writeToFile(this@MLActivity, "result_${it}",
-                Gson().toJson(invoiceItems))
-            writeToFile(this@MLActivity, "result_${it}_item",
-                Gson().toJson(convert2InvoiceData(invoiceItems, listORC)))
+                writeToFile(
+                    this@MLActivity, "result_${it}",
+                    Gson().toJson(invoiceItems)
+                )
+                writeToFile(
+                    this@MLActivity, "result_${it}_item",
+                    Gson().toJson(convert2InvoiceData(invoiceItems, listORC))
+                )
 
-        }
-        mergeJsonFiles(this@MLActivity)
+            }
+            mergeJsonFiles(this@MLActivity)
+       // }
     }
 
     data class InvoiceItem2(

@@ -18,9 +18,10 @@ object TotalExtractor {
      *
      * Examples:
      * - "GesamtsUmMe:   |  14,40" => true
+     * - "Betrag" => false
      */
     fun isTotalLine(line: String): Boolean {
-        if (line.contains("Bruttobetrag:")) {
+        if (line.contains("12,50")) {
             Log.e("Suong", line)
         }
         val totalKeywords = listOf(
@@ -29,9 +30,12 @@ object TotalExtractor {
             "total", "übertrag", "t0tal","betrag","bruttobetrag:"
         )
         val normalizedLine = line.lowercase()
-        return totalKeywords.any { keyword ->
-            normalizedLine.contains(keyword)
-        }
+
+        // Check contains number
+        val regex = Regex("""\b\d{1,3}([.,]\d{1,3})?\b""")
+        return regex.containsMatchIn(line) &&
+                totalKeywords.any { keyword -> normalizedLine.contains(keyword) }
+
     }
 
 

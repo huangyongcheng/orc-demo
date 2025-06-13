@@ -472,7 +472,24 @@ object InvoiceItemUtil {
 
     }
 
-    // VAT
+    /**
+     * Extracts the VAT (value-added tax) amount or percentage from a line of text.
+     *
+     * This function splits the given OCR line using a defined separator (e.g., pipe `|`),
+     * then searches for the part that contains a VAT percentage (e.g., "5,09 (20%)").
+     * If such a part is found, it returns the cleaned VAT value using `cleanVatText()`.
+     *
+     * Internally, it uses `containsVatPercentage()` to identify relevant parts of the line.
+     *
+     * @param line The OCR line possibly containing VAT information.
+     * @return A cleaned VAT string if found, or null otherwise.
+     *
+     * Examples:
+     * - "Zwischensumme | 25,48 | 5,09 (20%) | 30,57" => "20%"
+     * - "MwSt: 19%" => "19%"
+     * - "Netto | 100,00 | 7,00 % MwSt | 107,00" => "7%"
+     * - "Totalbetrag | 142,30" => null
+     */
     private fun getVatFromLine(line: String?): String? {
 
         if(line?.contains("5,09") ==true){
