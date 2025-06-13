@@ -14,11 +14,11 @@ import com.example.orcdemo2.R
 import com.example.orcdemo2.ml.demo.LayoutExtractor
 import com.example.orcdemo2.ml.demo.LayoutSectionType
 import com.example.orcdemo2.ml.demo.SectionClassifier
-import com.example.orcdemo2.ml.refactor.Constants.SEPARATE_ITEM_PART
-import com.example.orcdemo2.ml.refactor.InvoiceConverter.convert2InvoiceData
-import com.example.orcdemo2.ml.refactor.InvoiceItemProcessor.containsWebsite
-import com.example.orcdemo2.ml.refactor.InvoiceItemProcessor.isInvoiceItem
-import com.example.orcdemo2.ml.refactor.model.LayoutLine
+import com.example.orcdemo2.ml.ocr.Constants.SEPARATE_ITEM_PART
+import com.example.orcdemo2.ml.ocr.InvoiceConverter.convert2InvoiceData
+import com.example.orcdemo2.ml.ocr.processor.InvoiceItemProcessor.containsWebsite
+import com.example.orcdemo2.ml.ocr.processor.InvoiceItemProcessor.isInvoiceItem
+import com.example.orcdemo2.ml.ocr.model.LayoutLine
 import com.example.orcdemo2.ml.tflite2.ImageClassifier
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

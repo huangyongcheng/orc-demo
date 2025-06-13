@@ -1,4 +1,4 @@
-package com.example.orcdemo2.ml.refactor.model
+package com.example.orcdemo2.ml.ocr.model
 
 
 data class InvoiceData(

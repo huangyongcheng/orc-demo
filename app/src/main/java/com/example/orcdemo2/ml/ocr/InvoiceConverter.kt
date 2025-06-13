@@ -1,17 +1,21 @@
-package com.example.orcdemo2.ml.refactor
+package com.example.orcdemo2.ml.ocr
 
 import android.text.TextUtils
 import android.util.Log
-import com.example.orcdemo2.ml.refactor.Constants.SEPARATE_ITEM_PART
-import com.example.orcdemo2.ml.refactor.InvoiceItemProcessor.extractNumberOnly
-import com.example.orcdemo2.ml.refactor.InvoiceItemProcessor.isProductNameValid
-import com.example.orcdemo2.ml.refactor.InvoiceItemProcessor.isValidNumber
-import com.example.orcdemo2.ml.refactor.TotalExtractor.cleanTotalText
-import com.example.orcdemo2.ml.refactor.VATExtractor.getVatFromLine
-import com.example.orcdemo2.ml.refactor.VATExtractor.mergeVATLine
-import com.example.orcdemo2.ml.refactor.model.InvoiceData
-import com.example.orcdemo2.ml.refactor.model.InvoiceItem
-import com.example.orcdemo2.ml.refactor.model.LayoutLine
+import com.example.orcdemo2.ml.ocr.Constants.SEPARATE_ITEM_PART
+import com.example.orcdemo2.ml.ocr.processor.InvoiceItemProcessor.extractNumberOnly
+import com.example.orcdemo2.ml.ocr.processor.InvoiceItemProcessor.isProductNameValid
+import com.example.orcdemo2.ml.ocr.processor.InvoiceItemProcessor.isValidNumber
+import com.example.orcdemo2.ml.ocr.extractor.ProductNameExtractor
+import com.example.orcdemo2.ml.ocr.extractor.TotalExtractor.cleanTotalText
+import com.example.orcdemo2.ml.ocr.extractor.VATExtractor.getVatFromLine
+import com.example.orcdemo2.ml.ocr.extractor.VATExtractor.mergeVATLine
+import com.example.orcdemo2.ml.ocr.extractor.QuantityExtractor
+import com.example.orcdemo2.ml.ocr.extractor.TotalExtractor
+import com.example.orcdemo2.ml.ocr.model.InvoiceData
+import com.example.orcdemo2.ml.ocr.model.InvoiceItem
+import com.example.orcdemo2.ml.ocr.model.LayoutLine
+import com.example.orcdemo2.ml.ocr.processor.InvoiceItemProcessor
 
 object InvoiceConverter {
 

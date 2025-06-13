@@ -1,7 +1,7 @@
-package com.example.orcdemo2.ml.refactor
+package com.example.orcdemo2.ml.ocr.extractor
 
 import android.util.Log
-import com.example.orcdemo2.ml.refactor.Constants.SEPARATE_ITEM_PART
+import com.example.orcdemo2.ml.ocr.Constants.SEPARATE_ITEM_PART
 
 object TotalExtractor {
 

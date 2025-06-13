@@ -1,7 +1,8 @@
-package com.example.orcdemo2.ml.refactor
+package com.example.orcdemo2.ml.ocr.extractor
 
 import android.util.Log
-import com.example.orcdemo2.ml.refactor.model.LayoutLine
+import com.example.orcdemo2.ml.ocr.Constants
+import com.example.orcdemo2.ml.ocr.model.LayoutLine
 
 object VATExtractor {
 

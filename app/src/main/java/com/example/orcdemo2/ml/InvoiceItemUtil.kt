@@ -2,9 +2,9 @@ package com.example.orcdemo2.ml
 
 import android.text.TextUtils
 import android.util.Log
-import com.example.orcdemo2.ml.refactor.model.InvoiceData
-import com.example.orcdemo2.ml.refactor.model.InvoiceItem
-import com.example.orcdemo2.ml.refactor.model.LayoutLine
+import com.example.orcdemo2.ml.ocr.model.InvoiceData
+import com.example.orcdemo2.ml.ocr.model.InvoiceItem
+import com.example.orcdemo2.ml.ocr.model.LayoutLine
 import java.text.SimpleDateFormat
 import java.util.Locale
 

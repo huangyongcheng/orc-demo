@@ -1,7 +1,7 @@
-package com.example.orcdemo2.ml.refactor
+package com.example.orcdemo2.ml.ocr.processor
 
 import android.util.Log
-import com.example.orcdemo2.ml.refactor.Constants.SEPARATE_ITEM_PART
+import com.example.orcdemo2.ml.ocr.Constants.SEPARATE_ITEM_PART
 import java.text.SimpleDateFormat
 import java.util.Locale
 

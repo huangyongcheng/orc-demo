@@ -1,4 +1,4 @@
-package com.example.orcdemo2.ml.refactor
+package com.example.orcdemo2.ml.ocr.extractor
 
 object QuantityExtractor {
 
