@@ -129,7 +129,7 @@ object InvoiceItemProcessor {
 
         // Check for non-item keywords
         val nonItemKeywords = listOf(
-            "gesamtsumme", "zahlung", "gegeben", "betrag", "summe",
+            "gesamtsumme", "zahlung", "gegeben", "betrag", "summe","smme",
             "kartenzahlung", "total", "t0tal", "wechselgeld", "bezahlt",
             "change", "gesamt", "mwst", "datum", "visa", "beleg-nr.",
             "beleg nummer", "belegnummer", "genehmigung", "terminalnummer",
