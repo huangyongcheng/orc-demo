@@ -116,12 +116,13 @@ class MLActivity : Activity() {
     }
 
 
+    var isInvoiceBefore: Boolean= false
     private fun testInvoiceOrc() {
         filesDir.delete()
         val allFiles = assets.list("ocr_test")
         allFiles?.filter { it.startsWith("test") }?.forEach {
 
-          //  if (it.equals("test18.json")) {
+         //   if (it.equals("test33.json")) {
 
 
                 val listORC = readProductsFromAssets(this@MLActivity, "ocr_test/$it")
@@ -135,7 +136,9 @@ class MLActivity : Activity() {
                         Log.e("Suong", "layoutLine: ${layoutLine}")
                     }
 
-                    if (isInvoiceItem(layoutLine.text)) {
+                    val isInvoiceItem = isInvoiceItem(layoutLine.text, isInvoiceBefore)
+                    isInvoiceBefore = isInvoiceItem.first
+                    if (isInvoiceItem.first) {
                         if (index > 0) {
                             val previousLayoutLine = listORC[index - 1]
                             val previousParts = previousLayoutLine.text.split(Regex("""\s+\|\s+""")).map { it.trim() }
@@ -147,7 +150,8 @@ class MLActivity : Activity() {
                             // If the previous line has only one part and the current line is visually more right-aligned
                             val shouldCombine = previousParts.size == 1 &&
                                     layoutLine.minX > previousLayoutLine.minX &&
-                                    !containsWebsite(previousLayoutLine.text)
+                                    !containsWebsite(previousLayoutLine.text) &&
+                                    isInvoiceItem.second
 
                             if (shouldCombine) {
                                 // Combine the previous and current layout lines into one invoice item
@@ -181,7 +185,7 @@ class MLActivity : Activity() {
 
             }
             mergeJsonFiles(this@MLActivity)
-       // }
+   //     }
     }
 
     data class InvoiceItem2(

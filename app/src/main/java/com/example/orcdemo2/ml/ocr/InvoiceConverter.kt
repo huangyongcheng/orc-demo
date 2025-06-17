@@ -42,56 +42,80 @@ object InvoiceConverter {
      */
     private fun getInvoiceItem(line: String): InvoiceItem {
 
-        val normalizedLine = line.replace("-", SEPARATE_ITEM_PART)
+        // "-0.5" not call replace
+        val normalizedLine = line.replace(Regex("""-(?!\d|[.,]\d)|-\s"""), SEPARATE_ITEM_PART)
         val parts = normalizedLine.split(Regex("""\s+\|\s+""")).map { it.trim() }
-        if (parts.size < 2) return InvoiceItem()
+        if (parts.size >= 2) {
 
-        var price: String? = null
-        var indexPrice: Int = parts.size - 1
-        for (i in 1..parts.size) {
-            val candidate = extractNumberOnly(parts[parts.size - i])
-            if (isValidNumber(candidate)) {
-                price = candidate
-                indexPrice = i
-                break
-            }
-        }
-
-        var name: String? = ""
-        var indexLastName: Int = 0
-        var quantity: String? = null
-        parts.forEachIndexed { index, item ->
-            val extractQuantity = QuantityExtractor.extractQuantityByKeyword(item)
-            if (extractQuantity != null) {
-                quantity = extractQuantity.first
-                if (extractQuantity.second != null) {
-                    name = extractQuantity.second
+            var price: String? = null
+            var indexPrice: Int = parts.size - 1
+            for (i in 1..parts.size) {
+                val candidate = extractNumberOnly(parts[parts.size - i])
+                if (isValidNumber(candidate)) {
+                    price = candidate
+                    indexPrice = i
+                    break
                 }
-            } else {
-                if (index <= indexPrice) {
-                    if (!isValidNumber(item) && isProductNameValid(item)) {
-                        name = "$name $item"
-                        indexLastName = index
+            }
+
+            var name: String? = ""
+            var indexLastName: Int = 0
+            var quantity: String? = null
+            parts.forEachIndexed { index, item ->
+                val extractQuantity = QuantityExtractor.extractQuantityByKeyword(item, index)
+                if (extractQuantity != null) {
+                    quantity = extractQuantity.first
+                    if (extractQuantity.second != null) {
+                        name = extractQuantity.second
+                    }
+                } else {
+                    if (index <= indexPrice) {
+                        if (!isValidNumber(item) && isProductNameValid(item)) {
+                            name = "$name $item"
+                            indexLastName = index
+                        }
                     }
                 }
             }
-        }
 
-        if (TextUtils.isEmpty(quantity)) {
-            if (indexLastName < (parts.size - 1)) {
-                if (InvoiceItemProcessor.isPureInteger(parts[indexLastName + 1])) {
-                    quantity = parts[indexLastName + 1]
+            if (TextUtils.isEmpty(quantity)) {
+                if (indexLastName < (parts.size - 1)) {
+                    if (InvoiceItemProcessor.isPureInteger(parts[indexLastName + 1])) {
+                        quantity = parts[indexLastName + 1]
+                    }
                 }
             }
+
+
+            val cleanedName = ProductNameExtractor.extractTextBeforeFirstNumber(ProductNameExtractor.cleanTextKeepName(name?.trim()))
+            return InvoiceItem(
+                name = cleanedName,
+                quantity = quantity?.trim(),
+                totalPrice = extractNumberOnly(price?.trim())
+            )
+        } else{
+            // far invoice with one part
+            val trimmed = line.trim()
+            val regex = Regex("^(\\d+)\\s+(.+)$")
+
+            val match = regex.matchEntire(trimmed)
+            var quantity = ""
+            var name = line
+             if (match != null) {
+                quantity = match.groupValues[1]
+                name = match.groupValues[2]
+
+            }
+
+            val cleanedName = ProductNameExtractor.extractTextBeforeFirstNumber(ProductNameExtractor.cleanTextKeepName(name.trim()))
+
+            return InvoiceItem(
+                name = cleanedName,
+                quantity = quantity.trim()
+            )
+
+
         }
-
-
-        val cleanedName = ProductNameExtractor.extractTextBeforeFirstNumber(ProductNameExtractor.cleanTextKeepName(name?.trim()))
-        return InvoiceItem(
-            name = cleanedName,
-            quantity = quantity?.trim(),
-            totalPrice = extractNumberOnly(price?.trim())
-        )
     }
 
     /**
@@ -141,13 +165,14 @@ object InvoiceConverter {
         itemInvoices: List<LayoutLine>,
         ocrTexts: List<LayoutLine>
     ): InvoiceData {
-        val index = ocrTexts.indexOfFirst { getVatFromLine(it.text) != null }
-        var lineVat = ocrTexts.getOrNull(index)
+        val sortOrcTexts = ocrTexts.sortedByDescending { it.midY }
+        val index = sortOrcTexts.indexOfFirst { getVatFromLine(it.text) != null }
+        var lineVat = sortOrcTexts.getOrNull(index)
         val cleanVat = getVatFromLine(lineVat?.text)
         if (lineVat != null && cleanVat.equals("%")) {
-            lineVat = mergeVATLine(lineVat, ocrTexts[index + 1])
+            lineVat = mergeVATLine(lineVat, sortOrcTexts[index + 1])
         }
-        val sortOrcTexts = ocrTexts.sortedByDescending { it.midY }
+
         val total = sortOrcTexts.find { TotalExtractor.isTotalLine(it.text) }
 
         val invoiceItems = convert2InvoiceItem(itemInvoices)

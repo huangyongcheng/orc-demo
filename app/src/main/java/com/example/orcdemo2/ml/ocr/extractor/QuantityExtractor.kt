@@ -2,6 +2,12 @@ package com.example.orcdemo2.ml.ocr.extractor
 
 object QuantityExtractor {
 
+    private val quantityPatterns = listOf(
+        Regex("""(?i)\bqty[:\s]*([0-9]+[.,]?[0-9]*)\s+(.+)"""),
+        Regex("""([0-9]+[.,]?[0-9]*)\s*[xX]\s*(.+)"""),
+        Regex("""([0-9]+[.,]?[0-9]*)\s+(.+)""")
+    )
+
     /**
      * Extracts a quantity value from a line of text using known unit keywords.
      *
@@ -23,7 +29,7 @@ object QuantityExtractor {
      * Examples:
      * -  "2 Stück" =>true, "Stück 2" =>true
      */
-    fun extractQuantityByKeyword(text: String): Pair<String?, String?>? {
+    fun extractQuantityByKeyword(text: String, index:Int): Pair<String?, String?>? {
         val unitKeywords = listOf("stück", "kg", "flasche", "packung", "einheit", "dose", "päckchen", "posten:")
         val unitPattern = unitKeywords.joinToString("|")
         val quantityRegex = Regex(
@@ -37,7 +43,12 @@ object QuantityExtractor {
             null
         }
         if (result == null) {
-            return extractQuantityByX(text)
+            val extractQuantityByX = extractQuantityByX(text)
+            if (extractQuantityByX == null) {
+                return extractQuantityByPart(text,index)
+            } else {
+                return extractQuantityByX
+            }
         } else {
             return Pair(result, null)
         }
@@ -60,5 +71,41 @@ object QuantityExtractor {
             return Pair(quantity, item)
         }
         return null
+    }
+
+
+
+    private fun extractQuantityByPart(text: String,index: Int): Pair<String, String?>? {
+
+        if(index!=0) return null
+        val trimmed = text.trim()
+        for (pattern in quantityPatterns) {
+            val match = pattern.find(trimmed)
+            if (match != null && match.groupValues.size >= 3) {
+                val quantity = match.groupValues[1]
+                if(isValidQuantity(quantity)) {
+                    val name = match.groupValues[2].trim()
+                    return Pair(quantity, name)
+                } else{
+                    return null
+                }
+            }
+        }
+        return null
+    }
+
+    private fun isValidQuantity(input: String): Boolean {
+        if (input.contains(',') || input.contains('.')) return false
+
+        if (input.length > 1 && input.startsWith("0")) return false
+
+        if (!input.matches(Regex("""^\d+$"""))) return false
+
+        return try {
+            val value = input.toInt()
+            value in 0..100
+        } catch (e: NumberFormatException) {
+            false
+        }
     }
 }

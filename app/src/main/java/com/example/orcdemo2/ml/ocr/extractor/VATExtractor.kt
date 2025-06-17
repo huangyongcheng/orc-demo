@@ -123,7 +123,7 @@ object VATExtractor {
             return "%"
         }
         val percentInParentheses = Regex("""\((\d{1,3}(,\d{1,2})?)%\)""")
-        val match = percentInParentheses.find(input)
+        var match = percentInParentheses.find(input)
         if (match != null) {
             return match.groupValues[1] + "%"
         }
@@ -138,12 +138,20 @@ object VATExtractor {
             }
         }
         val startFromDigit = target.dropWhile { !it.isDigit() }
-        val cleaned = startFromDigit.replace(Regex("""[^0-9,%.]"""), "")
-        val percentIndex = cleaned.indexOf('%')
-        return if (percentIndex != -1) {
-            cleaned.substring(0, percentIndex + 1)
+
+        val percentRegex = Regex("""(\d+[.,]?\d*)\s*%""")
+        match = percentRegex.find(startFromDigit)
+        return if (match != null) {
+            // 0,29 HuSt 7% =>7%
+            "${match.groupValues[1]}%"
         } else {
-            cleaned
+            val cleaned = startFromDigit.replace(Regex("""[^0-9,%.]"""), "")
+            val percentIndex = cleaned.indexOf('%')
+            if (percentIndex != -1) {
+                cleaned.substring(0, percentIndex + 1)
+            } else {
+                cleaned
+            }
         }
     }
 

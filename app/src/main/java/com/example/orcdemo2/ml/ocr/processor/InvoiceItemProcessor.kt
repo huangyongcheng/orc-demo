@@ -25,9 +25,10 @@ object InvoiceItemProcessor {
      * - "Preis: 12.45 €" => "12.45"
      * - "No numbers here" => null
      * - "10Stück" => "10"
+     * - "-1.90" => "-1.90"
      */
     fun extractNumberOnly(text: String?): String? {
-        val regex = Regex("""\d+[.,]?\d*""")
+        val regex = Regex("""-?\d+[.,]?\d*""")
         return text?.let { regex.find(it)?.value }
     }
 
@@ -55,7 +56,7 @@ object InvoiceItemProcessor {
      * - null => false
      */
     fun isValidNumber(text: String?): Boolean {
-        val regex = Regex("""^\d+(?:[.,]\d+)?$""")
+        val regex = Regex("""^-?\d+(?:[.,]\d+)?$""")
         if (text != null) {
             return regex.matches(text.trim())
         }
@@ -344,43 +345,61 @@ object InvoiceItemProcessor {
      * - `"12.99 | MwSt 7%"` => `false`
      * - `"Wasserflasche | 0,50"` => `true`
      */
-    fun isInvoiceItem(text: String): Boolean {
-        if (!text.contains(SEPARATE_ITEM_PART)) return false
+    fun isInvoiceItem(text: String, isInvoiceBefore: Boolean): Pair<Boolean,Boolean> {
+        if (text.contains(SEPARATE_ITEM_PART)) {
 
+            // Check for non-item keywords
+            val nonItemKeywords = listOf(
+                "gesamtsumme", "zahlung", "gegeben", "betrag", "summe", "smme",
+                "kartenzahlung", "total", "t0tal", "wechselgeld", "bezahlt",
+                "change", "gesamt", "mwst", "datum", "visa", "beleg-nr.",
+                "beleg nummer", "belegnummer", "genehmigung", "terminalnummer",
+                "zurück", "tax:", "lieferung", "ust.", "umsatzsteuer",
+                "urnsatzstever", "urmsatzstever", "credit", "incl,", "incl.",
+                "brutto", "netto", "card", "="
+            )
+            if (nonItemKeywords.any { text.lowercase(Locale.ROOT).contains(it) }) return Pair(false,false)
 
+            // Check for equal keywords in parts
+            val parts = text.split(Regex(SEPARATE_ITEM_PART)).map { it.trim() }
+            val equalKeyWord = listOf("tax:", "tax", "cash", "cash tendered:", "net", "netto", "ec-cash", "übertrag")
+            if (parts.any { part -> equalKeyWord.any { it.equals(part.trim(), true) } }) return Pair(false,false)
 
-        // Check for non-item keywords
-        val nonItemKeywords = listOf(
-            "gesamtsumme", "zahlung", "gegeben", "betrag", "summe","smme",
-            "kartenzahlung", "total", "t0tal", "wechselgeld", "bezahlt",
-            "change", "gesamt", "mwst", "datum", "visa", "beleg-nr.",
-            "beleg nummer", "belegnummer", "genehmigung", "terminalnummer",
-            "zurück", "tax:", "lieferung", "ust.", "umsatzsteuer",
-            "urnsatzstever", "urmsatzstever", "credit", "incl,", "incl.",
-            "brutto", "netto", "card", "="
-        )
-        if (nonItemKeywords.any { text.lowercase(Locale.ROOT).contains(it) }) return false
+            // Check for currency format
+            val hasCurrency = Regex("\\d{1,3}[.,]\\d{2}").containsMatchIn(text)
+            if (!hasCurrency) return Pair(false,false)
 
-        // Check for equal keywords in parts
-        val parts = text.split(Regex(SEPARATE_ITEM_PART)).map { it.trim() }
-        val equalKeyWord = listOf("tax:", "tax", "cash", "cash tendered:", "net", "netto", "ec-cash", "übertrag")
-        if (parts.any { part -> equalKeyWord.any { it.equals(part.trim(), true) } }) return false
+            // Ensure multiple parts exist
+            if (parts.size <= 1) return Pair(false,false)
 
-        // Check for currency format
-        val hasCurrency = Regex("\\d{1,3}[.,]\\d{2}").containsMatchIn(text)
-        if (!hasCurrency) return false
+            // Validate parts
+            if (parts.all { hasMoreLettersThanDigits(it) }) return Pair(false,false)
+            if (containsDate(text)) return Pair(false,false)
+            if (containsTime(text)) return Pair(false,false)
+            if (parts.any { containsInValidNumbers(it.trim()) }) return Pair(false,false)
+            if (parts.all { isNumericWithoutLetters(it.trim()) }) return Pair(false,false)
+            if (parts.any { containsWebsite(it.trim()) }) return Pair(false,false)
+        } else {
+            if (startsWithIntegerFollowedBySpace(text) && isInvoiceBefore) {
+                return Pair(true,false)
+            }
+            return Pair(false,false)
+        }
 
-        // Ensure multiple parts exist
-        if (parts.size <= 1) return false
-
-        // Validate parts
-        if (parts.all { hasMoreLettersThanDigits(it) }) return false
-        if (containsDate(text)) return false
-        if (containsTime(text)) return false
-        if (parts.any { containsInValidNumbers(it.trim()) }) return false
-        if (parts.all { isNumericWithoutLetters(it.trim()) }) return false
-        if (parts.any { containsWebsite(it.trim()) }) return false
-
-        return true
+        return Pair(true,true)
     }
+
+    private fun startsWithIntegerFollowedBySpace(text: String): Boolean {
+        val trimmed = text.trim()
+        val regex = Regex("^(\\d{1,3})\\s+[A-Za-z].*")
+
+        val match = regex.matchEntire(trimmed)
+        if (match != null) {
+            val number = match.groupValues[1].toIntOrNull()
+            return number != null && number in 0..100
+        }
+
+        return false
+    }
+
 }
