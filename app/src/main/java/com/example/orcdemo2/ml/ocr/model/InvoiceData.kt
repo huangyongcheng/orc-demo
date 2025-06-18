@@ -4,6 +4,8 @@ package com.example.orcdemo2.ml.ocr.model
 data class InvoiceData(
     val vat: String? = null,
     val total: String? = null,
+    val currency: String? = null,
+    val date: String? = null,
     val items: List<InvoiceItem>? = null
 )
 

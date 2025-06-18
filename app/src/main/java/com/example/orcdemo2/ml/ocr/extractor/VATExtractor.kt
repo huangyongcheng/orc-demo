@@ -86,7 +86,7 @@ object VATExtractor {
      * - "Totalbetrag | 142,30" => null
      */
     fun getVatFromLine(line: String?): String? {
-        if (line?.contains("5,09") == true) {
+        if (line?.contains("%") == true) {
             Log.e("Suong", line)
         }
         val parts = line?.split(Regex(Constants.SEPARATE_ITEM_PART))?.map { it.trim() }

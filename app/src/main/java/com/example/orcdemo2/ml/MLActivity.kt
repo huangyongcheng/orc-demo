@@ -122,7 +122,7 @@ class MLActivity : Activity() {
         val allFiles = assets.list("ocr_test")
         allFiles?.filter { it.startsWith("test") }?.forEach {
 
-         //   if (it.equals("test33.json")) {
+            if (it.equals("test31.json")) {
 
 
                 val listORC = readProductsFromAssets(this@MLActivity, "ocr_test/$it")
@@ -185,7 +185,7 @@ class MLActivity : Activity() {
 
             }
             mergeJsonFiles(this@MLActivity)
-   //     }
+        }
     }
 
     data class InvoiceItem2(

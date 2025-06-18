@@ -3,6 +3,8 @@ package com.example.orcdemo2.ml.ocr
 import android.text.TextUtils
 import android.util.Log
 import com.example.orcdemo2.ml.ocr.Constants.SEPARATE_ITEM_PART
+import com.example.orcdemo2.ml.ocr.extractor.CurrencyExtractor
+import com.example.orcdemo2.ml.ocr.extractor.DateExtractor
 import com.example.orcdemo2.ml.ocr.processor.InvoiceItemProcessor.extractNumberOnly
 import com.example.orcdemo2.ml.ocr.processor.InvoiceItemProcessor.isProductNameValid
 import com.example.orcdemo2.ml.ocr.processor.InvoiceItemProcessor.isValidNumber
@@ -12,6 +14,7 @@ import com.example.orcdemo2.ml.ocr.extractor.VATExtractor.getVatFromLine
 import com.example.orcdemo2.ml.ocr.extractor.VATExtractor.mergeVATLine
 import com.example.orcdemo2.ml.ocr.extractor.QuantityExtractor
 import com.example.orcdemo2.ml.ocr.extractor.TotalExtractor
+import com.example.orcdemo2.ml.ocr.extractor.VATExtractor
 import com.example.orcdemo2.ml.ocr.model.InvoiceData
 import com.example.orcdemo2.ml.ocr.model.InvoiceItem
 import com.example.orcdemo2.ml.ocr.model.LayoutLine
@@ -165,23 +168,28 @@ object InvoiceConverter {
         itemInvoices: List<LayoutLine>,
         ocrTexts: List<LayoutLine>
     ): InvoiceData {
-        val sortOrcTexts = ocrTexts.sortedByDescending { it.midY }
-        val index = sortOrcTexts.indexOfFirst { getVatFromLine(it.text) != null }
-        var lineVat = sortOrcTexts.getOrNull(index)
+
+        val index = ocrTexts.indexOfFirst { getVatFromLine(it.text) != null }
+        var lineVat = ocrTexts.getOrNull(index)
         val cleanVat = getVatFromLine(lineVat?.text)
         if (lineVat != null && cleanVat.equals("%")) {
-            lineVat = mergeVATLine(lineVat, sortOrcTexts[index + 1])
+            lineVat = mergeVATLine(lineVat, ocrTexts[index + 1])
         }
-
+        val sortOrcTexts = ocrTexts.sortedByDescending { it.midY }
         val total = sortOrcTexts.find { TotalExtractor.isTotalLine(it.text) }
-
+        val date = sortOrcTexts.find { DateExtractor.containsDate(it.text) }
+        val currency = sortOrcTexts.find { CurrencyExtractor.extractCurrencyCode(it.text).first }
         val invoiceItems = convert2InvoiceItem(itemInvoices)
         val cleanVAT = getVatFromLine(lineVat?.text)
         val cleanTotal = cleanTotalText(total?.text)
+        val cleanDate = DateExtractor.extractDate(date?.text)
+        val cleanCurrency = CurrencyExtractor.extractCurrencyCode(currency?.text).second
         return InvoiceData(
             items = invoiceItems,
             vat = cleanVAT,
-            total = cleanTotal
+            total = cleanTotal,
+            date =  cleanDate,
+            currency = cleanCurrency
         )
     }
 }
